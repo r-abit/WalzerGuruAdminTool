@@ -9,10 +9,10 @@ import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 
 const form = useForm({
-    name: '',
+    firstname: '',
+    lastname: '',
+    username: '',
     email: '',
-    height: '',
-    birthday: '',
     password: '',
     password_confirmation: '',
     terms: false,
@@ -36,25 +36,42 @@ const submit = () => {
         <JetValidationErrors class="mb-4" />
 
         <form @submit.prevent="submit">
-            <div>
-                <JetLabel for="name" value="Name" />
-                <JetInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+            <div class="mt-4">
+                <div class="inline-grid grid-cols-2 gap-4">
+                    <div>
+                        <JetLabel for="firtname" value="Firstname" />
+                        <JetInput
+                            id="firstname"
+                            v-model="form.firstname"
+                            type="text"
+                            class="mt-1 block w-full"
+                            required
+                            autofocus
+                            autocomplete="firstname"
+                        />
+                    </div>
+
+                    <div>
+                        <JetLabel for="lastname" value="Lastname" />
+                        <JetInput
+                            id="lastname"
+                            v-model="form.lastname"
+                            type="text"
+                            class="mt-1 block w-full"
+                            required
+                            autofocus
+                            autocomplete="lastname"
+                        />
+                    </div>
+                </div>
             </div>
 
             <div class="mt-4">
-                <JetLabel for="email" value="Email" />
+                <JetLabel for="username" value="Username" />
                 <JetInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
+                    id="username"
+                    v-model="form.username"
+                    type="text"
                     class="mt-1 block w-full"
                     required
                 />
