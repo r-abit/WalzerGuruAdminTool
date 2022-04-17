@@ -23,7 +23,7 @@ const form = useForm({
     lastname: props.user.lastname,
     height: props.user.height,
     birthday: props.user.birthday,
-    level: props.user.dancing_level,
+    dancing_level: props.user.dancing_level,
     email: props.user.email,
     photo: null,
 });
@@ -82,7 +82,7 @@ const clearPhotoFileInput = () => {
 export default {
     data: function() {
         return {
-            selecedDancingLevels: this.user.dancing_level,
+            dancing_level: this.user.dancing_level,
         }
     },
 }
@@ -194,8 +194,8 @@ export default {
 
             <!-- Dancing level -->
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="dancing_levels" value="Dancing level" />
-                <select class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" v-model="selecedDancingLevels">
+                <JetLabel for="dancing_level" value="Dancing level" />
+                <select class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" v-model="form.dancing_level">
                     <option v-for="(dancingLevel, index) in dancingLevels" :key="index" :value="index">
                         {{dancingLevel}}
                     </option>
