@@ -9,14 +9,21 @@ import JetInputError from '@/Jetstream/InputError.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetActionMessage from '@/Jetstream/ActionMessage.vue';
 import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
+import JetDropdown from '@/Jetstream/Dropdown.vue';
 
 const props = defineProps({
     user: Object,
+    dancingLevels: Object,
 });
 
 const form = useForm({
     _method: 'PUT',
-    name: props.user.name,
+    username: props.user.username,
+    firstname: props.user.firstname,
+    lastname: props.user.lastname,
+    height: props.user.height,
+    birthday: props.user.birthday,
+    level: props.user.dancing_level,
     email: props.user.email,
     photo: null,
 });
@@ -71,6 +78,16 @@ const clearPhotoFileInput = () => {
 };
 </script>
 
+<script>
+export default {
+    data: function() {
+        return {
+            selecedDancingLevels: this.user.dancing_level,
+        }
+    },
+}
+</script>
+
 <template>
     <JetFormSection @submitted="updateProfileInformation">
         <template #title>
@@ -123,17 +140,79 @@ const clearPhotoFileInput = () => {
                 <JetInputError :message="form.errors.photo" class="mt-2" />
             </div>
 
-            <!-- Name -->
+            <!-- Firstname -->
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="name" value="Name" />
+                <JetLabel for="firstname" value="Firstname" />
                 <JetInput
-                    id="name"
-                    v-model="form.name"
+                    id="firstname"
+                    v-model="form.firstname"
                     type="text"
                     class="mt-1 block w-full"
-                    autocomplete="name"
+                    required
                 />
-                <JetInputError :message="form.errors.name" class="mt-2" />
+                <JetInputError :message="form.errors.firstname" class="mt-2" />
+            </div>
+
+            <!-- Lastname -->
+            <div class="col-span-6 sm:col-span-4">
+                <JetLabel for="lastname" value="Lastname" />
+                <JetInput
+                    id="lastname"
+                    v-model="form.lastname"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                />
+                <JetInputError :message="form.errors.lastname" class="mt-2" />
+            </div>
+
+            <!-- Birthday -->
+            <div class="col-span-6 sm:col-span-4">
+                <JetLabel for="birthday" value="Birthday" />
+                <JetInput
+                    id="birthday"
+                    v-model="form.birthday"
+                    type="date"
+                    class="mt-1 block w-full"
+                    required
+                />
+                <JetInputError :message="form.errors.birthday" class="mt-2" />
+            </div>
+
+            <!-- Height -->
+            <div class="col-span-6 sm:col-span-4">
+                <JetLabel for="height" value="Height (in cm)" />
+                <JetInput
+                    id="height"
+                    v-model="form.height"
+                    type="number"
+                    class="mt-1 block w-full"
+                    required
+                />
+                <JetInputError :message="form.errors.height" class="mt-2" />
+            </div>
+
+            <!-- Dancing level -->
+            <div class="col-span-6 sm:col-span-4">
+                <JetLabel for="dancing_levels" value="Dancing level" />
+                <select class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" v-model="selecedDancingLevels">
+                    <option v-for="(dancingLevel, index) in dancingLevels" :key="index" :value="index">
+                        {{dancingLevel}}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Username -->
+            <div class="col-span-6 sm:col-span-4">
+                <JetLabel for="username" value="Username" />
+                <JetInput
+                    id="username"
+                    v-model="form.username"
+                    type="text"
+                    class="mt-1 block w-full bg-gray-200/50"
+                    disabled
+                />
+                <JetInputError :message="form.errors.username" class="mt-2" />
             </div>
 
             <!-- Email -->

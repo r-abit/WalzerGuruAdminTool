@@ -88,32 +88,6 @@ const submit = () => {
                 />
             </div>
 
-            <!-- <div class="mt-4">
-                <div class="inline-grid grid-cols-2 gap-4">
-                    <div>
-                        <JetLabel for="height" value="Height (in cm)" />
-                        <JetInput
-                            id="height"
-                            v-model="form.height"
-                            type="number"
-                            class="mt-1 block w-full"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <JetLabel for="birthday" value="Birthday" />
-                        <JetInput
-                            id="birthday"
-                            v-model="form.birthday"
-                            type="date"
-                            class="mt-1 block w-full"
-                            required
-                        />
-                    </div>
-                </div>
-            </div> -->
-
             <div class="mt-4">
                 <JetLabel for="password" value="Password" />
                 <JetInput

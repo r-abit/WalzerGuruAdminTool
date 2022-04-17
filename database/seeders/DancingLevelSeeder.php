@@ -15,7 +15,7 @@ class DancingLevelSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('dancing_level')->insert([
+        DB::table('dancing_levels')->insert([
             ['level' => 'Profitänzer'],
             ['level' => 'Turniertänzer'],
             ['level' => 'Breitensport'],

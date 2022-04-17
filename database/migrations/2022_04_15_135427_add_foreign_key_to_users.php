@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedBigInteger('dancing_level')->after('lastname')->nullable();
-            $table->foreign('dancing_level')->references('id')->on('dancing_level')->nullOnDelete();
+            $table->foreign('dancing_level')->references('id')->on('dancing_levels')->nullOnDelete();
         });
     }
 
