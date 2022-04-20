@@ -2,8 +2,8 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrganizerController;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +33,12 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::controller(OrganizerController::class)->group(function () {
+        Route::get('/organizers', 'show')->name('organizers.show');
+        Route::post('/organizers', 'insert')->name('organizers.insert');
+        Route::delete('/organizers/{id}', 'delete')->name('organizers.delete');
+    });
 });
 
 /** This allows us to customerize the routes of packages as needed */

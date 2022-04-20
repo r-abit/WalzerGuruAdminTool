@@ -52,6 +52,9 @@ const logout = () => {
                                 <JetNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </JetNavLink>
+                                <JetNavLink :href="route('organizers.show')" :active="route().current('organizers.show')">
+                                    Veranstalter
+                                </JetNavLink>
                             </div>
                         </div>
 
@@ -211,6 +214,9 @@ const logout = () => {
                         <JetResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </JetResponsiveNavLink>
+                        <JetNavLink :href="route('organizers.show')" :active="route().current('organizers')">
+                            Veranstalter
+                        </JetNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
