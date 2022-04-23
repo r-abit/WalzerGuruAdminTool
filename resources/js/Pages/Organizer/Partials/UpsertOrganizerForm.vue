@@ -7,39 +7,45 @@ import JetLabel from '@/Jetstream/Label.vue';
 import JetActionMessage from '@/Jetstream/ActionMessage.vue';
 
 const props = defineProps({
-    id: String,
-    name: String,
-    email: String,
-    website: String,
-    uid_number: String,
-    street: String,
-    zip: String,
-    city: String,
-    phone: String,
-    description: String,
 });
 
 const form = useForm({
-    _method: 'POST',
-    id: props.id,
-    name: props.name,
-    email: props.email,
-    website: props.website,
-    uid_number: props.uid_number,
-    street: props.street,
-    zip: props.zip,
-    city: props.city,
-    phone: props.phone,
-    description: props.description,
+    id: null,
+    name: null,
+    email: null,
+    website: null,
+    uid_number: null,
+    street: null,
+    zip: null,
+    city: null,
+    phone: null,
+    description: null,
 });
 
 const upsertOrganizerInformation = () => {
     form.post(route('organizers.upsert'), {
         errorBag: 'upsertOrganizerInformation',
         preserveScroll: true,
-        // onSuccess: () => upsertOrganizerInformation(),
+        onSuccess: () => clearFrom(),
     });
 };
+
+function clearFrom() {
+    form.reset();
+}
+
+function updateFormValues() {
+    form.id = document.getElementById('id').value;
+    form.name = document.getElementById('name').value;
+    form.email = document.getElementById('email').value;
+    form.website = document.getElementById('website').value;
+    form.uid_number = document.getElementById('uid_number').value;
+    form.street = document.getElementById('street').value;
+    form.zip = document.getElementById('zip').value;
+    form.city = document.getElementById('city').value;
+    form.phone = document.getElementById('phone').value;
+    form.description = document.getElementById('description').value;
+}
 </script>
 
 <template>
@@ -54,14 +60,13 @@ const upsertOrganizerInformation = () => {
                         v-model="form.id"
                         type="text"
                         class="mt-1 block w-full"
-                        required
                     />
                     <JetInputError :message="form.errors.id" class="mt-2" />
                 </div>
 
                 <!-- Organizer name -->
                 <div>
-                    <JetLabel for="name" value="Veranstalter" class="text-left"/>
+                    <JetLabel @click="test()" for="name" value="Veranstalter" class="text-left"/>
                     <JetInput
                         id="name"
                         v-model="form.name"
@@ -165,7 +170,7 @@ const upsertOrganizerInformation = () => {
 
                 <!-- Description -->
                 <div class="col-span-3">
-                    <JetLabel for="description" value="Beschreibeung" class="text-left"/>
+                    <JetLabel for="description" value="Beschreibung" class="text-left"/>
                     <textarea
                         id="description"
                         v-model="form.description"
@@ -180,10 +185,17 @@ const upsertOrganizerInformation = () => {
                     <JetActionMessage :on="form.recentlySuccessful" class="mr-3">
                         Gespeichert.
                     </JetActionMessage>
-
-                    <JetButton @click="submit()" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Speichern
+                    <JetButton @click="updateFormValues">
+                        <span v-if="form.processing"  class="flex items-center">
+                            <svg class="animate-spin h-4 w-4 mr-3" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            in Bearbeitung
+                        </span>
+                        <span v-else>Speichern</span>
                     </JetButton>
+
                 </div>
             </div>
         </form>

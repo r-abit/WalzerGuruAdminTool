@@ -4,7 +4,7 @@ const props = defineProps({
     organizers: Object,
 });
 
-const goToHome = (organizer) => {
+const updateForm = (organizer) => {
     document.getElementById('id').value = organizer.id;
     document.getElementById('name').value = organizer.name;
     document.getElementById('email').value = organizer.email;
@@ -44,7 +44,7 @@ const goToHome = (organizer) => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="organizer in organizers" @click="goToHome(organizer)" class="text-sm text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100">
+            <tr v-for="organizer in organizers" @click="updateForm(organizer)" class="text-sm text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100">
                 <td class="px-3 py-3">
                     {{ organizer.name }}
                 </td>

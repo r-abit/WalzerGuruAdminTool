@@ -17,4 +17,6 @@ class Organizer extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+    protected $guarded = [];
+
 }
