@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
-use Laravel\Fortify\Features;
 use Laravel\Jetstream\Jetstream;
 use App\Models\Organizer;
 use Illuminate\Support\Facades\Validator;
