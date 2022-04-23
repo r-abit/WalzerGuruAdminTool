@@ -1,6 +1,4 @@
 <script setup>
-import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
 import { useForm } from '@inertiajs/inertia-vue3';
 import JetButton from '@/Jetstream/Button.vue';
 import JetInput from '@/Jetstream/Input.vue';
@@ -9,99 +7,82 @@ import JetLabel from '@/Jetstream/Label.vue';
 import JetActionMessage from '@/Jetstream/ActionMessage.vue';
 
 const props = defineProps({
-    user: Object,
+    id: String,
+    name: String,
+    email: String,
+    website: String,
+    uid_number: String,
+    street: String,
+    zip: String,
+    city: String,
+    phone: String,
+    description: String,
 });
 
 const form = useForm({
-    _method: 'PUT',
-    organizerName: '',
-    description: '',
-    website: '',
-    street: '',
-    zip: '',
-    city: '',
-    phone: '',
-    fax: '',
-    logo: null,
-    uidNumber: '',
+    _method: 'POST',
+    id: props.id,
+    name: props.name,
+    email: props.email,
+    website: props.website,
+    uid_number: props.uid_number,
+    street: props.street,
+    zip: props.zip,
+    city: props.city,
+    phone: props.phone,
+    description: props.description,
 });
 
-const photoPreview = ref(null);
-const photoInput = ref(null);
-
-const insertOrganizerInformation = () => {
-    if (photoInput.value) {
-        form.photo = photoInput.value.files[0];
-    }
-
-    form.post(route('organizers.insert'), {
-        errorBag: 'insertOrganizerInformation',
+const upsertOrganizerInformation = () => {
+    form.post(route('organizers.upsert'), {
+        errorBag: 'upsertOrganizerInformation',
         preserveScroll: true,
-        onSuccess: () => clearPhotoFileInput(),
+        // onSuccess: () => upsertOrganizerInformation(),
     });
 };
-
-const selectNewPhoto = () => {
-    photoInput.value.click();
-};
-
-const updatePhotoPreview = () => {
-    const photo = photoInput.value.files[0];
-
-    if (! photo) return;
-
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-        photoPreview.value = e.target.result;
-    };
-
-    reader.readAsDataURL(photo);
-};
-
-const deletePhoto = () => {
-    Inertia.delete(route('current-user-photo.destroy'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            photoPreview.value = null;
-            clearPhotoFileInput();
-        },
-    });
-};
-
-const clearPhotoFileInput = () => {
-    if (photoInput.value?.value) {
-        photoInput.value.value = null;
-    }
-};
-</script>
-
-<script>
-export default {
-    data: function() {
-        return {
-            dancing_level: this.user.dancing_level,
-        }
-    },
-}
 </script>
 
 <template>
     <div class="mt-5 md:mt-0 md:col-span-2">
-        <form @submitted="insertOrganizerInformation">
+        <form @submit.prevent="upsertOrganizerInformation">
             <div class="grid grid-cols-4 gap-4 px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-md sm:rounded-md">
-
-                <!-- Organizer name -->
-                <div>
-                    <JetLabel for="organizerName" value="Veranstalter" class="text-left"/>
+                <!-- Id (hidden but needed to update existing organizers -->
+                <div class="hidden">
+                    <JetLabel for="id" value="Id" class="text-left"/>
                     <JetInput
-                        id="organizerName"
-                        v-model="form.organizerName"
+                        id="id"
+                        v-model="form.id"
                         type="text"
                         class="mt-1 block w-full"
                         required
                     />
-                    <JetInputError :message="form.errors.organizerName" class="mt-2" />
+                    <JetInputError :message="form.errors.id" class="mt-2" />
+                </div>
+
+                <!-- Organizer name -->
+                <div>
+                    <JetLabel for="name" value="Veranstalter" class="text-left"/>
+                    <JetInput
+                        id="name"
+                        v-model="form.name"
+                        type="text"
+                        class="mt-1 block w-full"
+                        required
+                    />
+                    <JetInputError :message="form.errors.name" class="mt-2" />
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <JetLabel for="email" value="E-Mail" class="text-left"/>
+                    <JetInput
+                        id="email"
+                        v-model="form.email"
+                        type="email"
+                        class="mt-1 block w-full"
+                        required
+                    />
+                    <JetInputError :message="form.errors.email" class="mt-2" />
                 </div>
 
                 <!-- Website -->
@@ -117,30 +98,17 @@ export default {
                     <JetInputError :message="form.errors.website" class="mt-2" />
                 </div>
 
-                <!-- Description -->
-                <div class="col-span-2">
-                    <JetLabel for="description" value="Beschreibeung" class="text-left"/>
-                    <textarea
-                        id="description"
-                        v-model="form.description"
-                        type="textarea"
-                        class="mt-1 w-full h-12 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
-                        required
-                    />
-                    <JetInputError :message="form.errors.description" class="mt-2" />
-                </div>
-
                 <!-- uidNumber -->
                 <div>
-                    <JetLabel for="uidNumber" value="UID-Nummer" class="text-left"/>
+                    <JetLabel for="uid_number" value="UID-Nummer" class="text-left"/>
                     <JetInput
-                        id="uidNumber"
-                        v-model="form.uidNumber"
+                        id="uid_number"
+                        v-model="form.uid_number"
                         type="text"
                         class="mt-1 block w-full justify-self-end"
                         required
                     />
-                    <JetInputError :message="form.errors.uidNumber" class="mt-2" />
+                    <JetInputError :message="form.errors.uid_number" class="mt-2" />
                 </div>
 
                 <!-- Street -->
@@ -195,30 +163,28 @@ export default {
                     <JetInputError :message="form.errors.phone" class="mt-2" />
                 </div>
 
-                <!-- Fax -->
-                <div>
-                    <JetLabel for="fax" value="Fax" class="text-left"/>
-                    <JetInput
-                        id="fax"
-                        v-model="form.fax"
-                        type="text"
-                        class="mt-1 block w-full"
+                <!-- Description -->
+                <div class="col-span-3">
+                    <JetLabel for="description" value="Beschreibeung" class="text-left"/>
+                    <textarea
+                        id="description"
+                        v-model="form.description"
+                        type="textarea"
+                        class="mt-1 w-full h-15 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         required
                     />
-                    <JetInputError :message="form.errors.fax" class="mt-2" />
+                    <JetInputError :message="form.errors.description" class="mt-2" />
                 </div>
 
-                <!-- Fax -->
-                <div class="col-span-2 self-end">
+                <div class="col-span-1 self-end mb-2">
                     <JetActionMessage :on="form.recentlySuccessful" class="mr-3">
                         Gespeichert.
                     </JetActionMessage>
 
-                    <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    <JetButton @click="submit()" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                         Speichern
                     </JetButton>
                 </div>
-
             </div>
         </form>
     </div>

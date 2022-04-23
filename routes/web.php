@@ -36,8 +36,8 @@ Route::middleware([
 
     Route::controller(OrganizerController::class)->group(function () {
         Route::get('/organizers', 'show')->name('organizers.show');
-        Route::post('/organizers', 'insert')->name('organizers.insert');
-        Route::delete('/organizers/{id}', 'delete')->name('organizers.delete');
+        Route::post('/organizers', 'upsert')->name('organizers.upsert');
+        Route::delete('/organizers', 'delete')->name('organizers.delete');
     });
 });
 
