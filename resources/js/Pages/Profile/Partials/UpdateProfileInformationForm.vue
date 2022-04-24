@@ -13,6 +13,7 @@ import JetDropdown from '@/Jetstream/Dropdown.vue';
 
 const props = defineProps({
     user: Object,
+
     dancingLevels: Object,
 });
 

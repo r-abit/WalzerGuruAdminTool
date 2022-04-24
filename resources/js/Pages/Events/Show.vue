@@ -1,8 +1,9 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import UpsertEventsForm from "./Partials/UpsertEventsForm";
 
 defineProps({
-    user: Object,
+    events: Object,
     organizers: Object,
 });
 </script>
@@ -16,6 +17,7 @@ defineProps({
         </template>
 
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <UpsertEventsForm :organizers="$page.props.organizers" />
         </div>
 
     </AppLayout>
