@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EventsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrganizerController;
@@ -38,6 +39,12 @@ Route::middleware([
         Route::get('/organizers', 'show')->name('organizers.show');
         Route::post('/organizers', 'upsert')->name('organizers.upsert');
         Route::delete('/organizers', 'delete')->name('organizers.delete');
+    });
+
+    Route::controller(EventsController::class)->group(function () {
+        Route::get('/events', 'show')->name('events.show');
+        Route::post('/events', 'upsert')->name('events.upsert');
+        Route::delete('/events', 'delete')->name('events.delete');
     });
 });
 
