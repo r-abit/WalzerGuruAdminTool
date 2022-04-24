@@ -21,7 +21,7 @@ class EventsController extends Controller
 
     public function upsert(Request $request): \Inertia\Response
     {
-        $validate = Validator::make($request->all(), [
+        Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'participants' => ['required', 'integer'],
             'date' => ['required', 'after:'. date('Y-m-d', strtotime('+3 day', time())), 'date_format:Y-m-d'],
