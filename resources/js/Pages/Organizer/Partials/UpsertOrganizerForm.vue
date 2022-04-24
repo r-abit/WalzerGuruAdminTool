@@ -66,7 +66,7 @@ function updateFormValues() {
 
                 <!-- Organizer name -->
                 <div>
-                    <JetLabel @click="test()" for="name" value="Veranstalter" class="text-left"/>
+                    <JetLabel for="name" value="Veranstalter" class="text-left"/>
                     <JetInput
                         id="name"
                         v-model="form.name"
