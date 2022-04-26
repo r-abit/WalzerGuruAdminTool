@@ -42,7 +42,6 @@ class OrganizerController extends Controller
 
     public function delete(Request $request): \Inertia\Response
     {
-        dd("TODO");
         Organizer::where('id', $request['id'])->delete();
         return Jetstream::inertia()->render($request, 'Organizer/Show', [
             'organizers' => Organizer::get()->toArray(),
