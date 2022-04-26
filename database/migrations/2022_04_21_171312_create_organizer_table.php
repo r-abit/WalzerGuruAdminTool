@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('uid_number', 15);
             $table->string('street');
             $table->string('zip', 10);
-            $table->string('city', 20);
+            $table->string('city', 30);
             $table->string('phone', 15);
             $table->longText('description');
             $table->timestamps();
