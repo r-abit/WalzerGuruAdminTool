@@ -58,7 +58,8 @@ const updateForm = (event) => {
                     {{ event.name }}
                 </td>
                 <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
-                    {{ props.organizers[event.organizer_id -1].name }}
+                    Need to be fixed
+<!--                    {{ props.organizers[event.organizer_id-1].name }}-->
                 </td>
                 <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
                     {{ event.participants }}
