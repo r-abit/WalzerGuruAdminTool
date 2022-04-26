@@ -23573,6 +23573,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     organizers: Object
@@ -23597,7 +23599,8 @@ __webpack_require__.r(__webpack_exports__);
 
     var __returned__ = {
       props: props,
-      updateForm: updateForm
+      updateForm: updateForm,
+      Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.Link
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -27729,14 +27732,17 @@ var _hoisted_3 = {
 };
 var _hoisted_4 = ["onClick"];
 var _hoisted_5 = ["onClick"];
-var _hoisted_6 = ["onClick"];
+
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Need to be fixed ");
+
 var _hoisted_7 = ["onClick"];
 var _hoisted_8 = ["onClick"];
-var _hoisted_9 = {
+var _hoisted_9 = ["onClick"];
+var _hoisted_10 = {
   "class": "px-3 py-3 flex justify-center items-center"
 };
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
   xmlns: "http://www.w3.org/2000/svg",
   "class": "p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer",
   fill: "none",
@@ -27765,8 +27771,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $setup.updateForm(event);
       }
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.organizers[event.organizer_id - 1].name), 9
-    /* TEXT, PROPS */
+    }, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    {{ props.organizers[event.organizer_id-1].name }}")], 8
+    /* PROPS */
     , _hoisted_5), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
       "class": "px-3 py-3 cursor-pointer",
       onClick: function onClick($event) {
@@ -27774,21 +27780,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.participants), 9
     /* TEXT, PROPS */
-    , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    , _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
       "class": "px-3 py-3 cursor-pointer",
       onClick: function onClick($event) {
         return $setup.updateForm(event);
       }
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.dresscode), 9
     /* TEXT, PROPS */
-    , _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    , _hoisted_8), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
       "class": "px-3 py-3 cursor-pointer",
       onClick: function onClick($event) {
         return $setup.updateForm(event);
       }
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.date), 9
     /* TEXT, PROPS */
-    , _hoisted_8), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
+    , _hoisted_9), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
       href: "/events",
       method: "delete",
       data: {
@@ -27796,7 +27802,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }
     }, {
       "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-        return [_hoisted_10];
+        return [_hoisted_11];
       }),
       _: 2
       /* DYNAMIC */
@@ -28223,51 +28229,100 @@ var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
   "class": "px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
 }, " Tel. "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   "class": "px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
-}, " E-Mail ")])], -1
+}, " E-Mail "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  "class": "px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider"
+}, " Löschen ")])], -1
 /* HOISTED */
 );
 
-var _hoisted_3 = ["onClick"];
-var _hoisted_4 = {
-  "class": "px-3 py-3"
+var _hoisted_3 = {
+  "class": "text-sm text-left border-b border-gray-200 hover:bg-gray-100"
 };
-var _hoisted_5 = {
-  "class": "px-3 py-3"
+var _hoisted_4 = ["onClick"];
+var _hoisted_5 = ["onClick"];
+var _hoisted_6 = ["onClick"];
+var _hoisted_7 = ["onClick"];
+var _hoisted_8 = ["onClick"];
+var _hoisted_9 = ["onClick"];
+var _hoisted_10 = {
+  "class": "px-3 py-3 flex justify-center items-center"
 };
-var _hoisted_6 = {
-  "class": "px-3 py-3"
-};
-var _hoisted_7 = {
-  "class": "px-3 py-3"
-};
-var _hoisted_8 = {
-  "class": "px-3 py-3"
-};
-var _hoisted_9 = {
-  "class": "px-3 py-3"
-};
+
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+  xmlns: "http://www.w3.org/2000/svg",
+  "class": "p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer",
+  fill: "none",
+  viewBox: "0 0 24 24",
+  stroke: "currentColor",
+  "stroke-width": "2"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+  "stroke-linecap": "round",
+  "stroke-linejoin": "round",
+  d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+})], -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.organizers, function (organizer) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
       onClick: function onClick($event) {
         return $setup.updateForm(organizer);
-      },
-      "class": "text-sm text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100"
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.name), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.street), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.zip), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.city), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.phone), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.email), 1
-    /* TEXT */
-    )], 8
-    /* PROPS */
-    , _hoisted_3);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.name), 9
+    /* TEXT, PROPS */
+    , _hoisted_4), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
+      onClick: function onClick($event) {
+        return $setup.updateForm(organizer);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.street), 9
+    /* TEXT, PROPS */
+    , _hoisted_5), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
+      onClick: function onClick($event) {
+        return $setup.updateForm(organizer);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.zip), 9
+    /* TEXT, PROPS */
+    , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
+      onClick: function onClick($event) {
+        return $setup.updateForm(organizer);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.city), 9
+    /* TEXT, PROPS */
+    , _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
+      onClick: function onClick($event) {
+        return $setup.updateForm(organizer);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.phone), 9
+    /* TEXT, PROPS */
+    , _hoisted_8), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
+      onClick: function onClick($event) {
+        return $setup.updateForm(organizer);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.email), 9
+    /* TEXT, PROPS */
+    , _hoisted_9), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
+      href: "/organizers",
+      method: "delete",
+      data: {
+        id: organizer.id
+      }
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [_hoisted_11];
+      }),
+      _: 2
+      /* DYNAMIC */
+
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["data"])])]);
   }), 256
   /* UNKEYED_FRAGMENT */
   ))])]);
