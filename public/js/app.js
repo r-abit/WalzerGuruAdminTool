@@ -23388,8 +23388,6 @@ __webpack_require__.r(__webpack_exports__);
     var updateForm = function updateForm(event) {
       var time = event.date.split(' ')[1].split(':');
       document.getElementById('id').value = event.id;
-      console.log(event.organizer_id); // console.log(document.getElementById('organizer_id').value);
-
       document.getElementById('organizer_id').value = event.organizer_id;
       document.getElementById('name').value = event.name;
       document.getElementById('participants').value = event.participants;
@@ -23467,22 +23465,24 @@ __webpack_require__.r(__webpack_exports__);
     var upsertEventInformation = function upsertEventInformation() {
       form.post(route('events.upsert'), {
         errorBag: 'upsertEventInformation',
-        preserveScroll: true // onSuccess: () => clearFrom(),
-
+        preserveScroll: true,
+        onSuccess: function onSuccess() {
+          return clearFrom();
+        }
       });
     };
 
-    function clearFrom() {// form.reset();
+    function clearFrom() {
+      form.reset();
     }
 
     function updateFormValues() {
-      var time = document.getElementById('time').value;
-      var date = document.getElementById('date').value;
-      form.id = document.getElementById('id').value; // form.organizer_id = document.getElementById('organizer_id').value;
-
+      form.id = document.getElementById('id').value;
+      form.organizer_id = document.getElementById('organizer_id').value;
       form.name = document.getElementById('name').value;
       form.participants = document.getElementById('participants').value;
-      form.date = date + " " + time + ":00";
+      form.date = document.getElementById('date').value;
+      form.time = document.getElementById('time').value;
       form.dresscode = document.getElementById('dresscode').value;
       form.street = document.getElementById('street').value;
       form.zip = document.getElementById('zip').value;
@@ -23638,14 +23638,14 @@ __webpack_require__.r(__webpack_exports__);
     var props = __props;
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm)({
       id: null,
-      organizer_id: null,
       name: null,
-      participants: null,
-      date: null,
-      dresscode: null,
+      email: null,
+      website: null,
+      uid_number: null,
       street: null,
       zip: null,
       city: null,
+      phone: null,
       description: null
     });
 

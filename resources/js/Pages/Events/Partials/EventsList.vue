@@ -9,8 +9,6 @@ const props = defineProps({
 const updateForm = (event) => {
     let time = event.date.split(' ')[1].split(':');
     document.getElementById('id').value = event.id;
-    console.log(event.organizer_id);
-    // console.log(document.getElementById('organizer_id').value);
     document.getElementById('organizer_id').value = event.organizer_id;
     document.getElementById('name').value = event.name;
     document.getElementById('participants').value = event.participants;
