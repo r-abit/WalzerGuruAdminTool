@@ -68,7 +68,7 @@ const updateForm = (organizer) => {
                     {{ organizer.email }}
                 </td>
                 <td class="px-3 py-3 flex justify-center items-center ">
-                    <Link href="/organizers" method="delete" :data="{ id: organizer.id }">
+                    <Link href="/organizers" method="delete" as="button" :data="{ id: organizer.id }">
                         <svg
                              xmlns="http://www.w3.org/2000/svg"
                              class="p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer"

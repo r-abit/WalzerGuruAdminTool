@@ -23385,15 +23385,12 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var props = __props;
 
-    function deleteEvent(id) {
-      form.post('events.delete');
-      console.log("removed this " + id);
-    }
-
     var updateForm = function updateForm(event) {
       var time = event.date.split(' ')[1].split(':');
-      document.getElementById('organizer').value = event.organizer_id;
       document.getElementById('id').value = event.id;
+      console.log(event.organizer_id); // console.log(document.getElementById('organizer_id').value);
+
+      document.getElementById('organizer_id').value = event.organizer_id;
       document.getElementById('name').value = event.name;
       document.getElementById('participants').value = event.participants;
       document.getElementById('date').value = event.date.split(' ')[0];
@@ -23407,7 +23404,6 @@ __webpack_require__.r(__webpack_exports__);
 
     var __returned__ = {
       props: props,
-      deleteEvent: deleteEvent,
       updateForm: updateForm,
       Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.Link
     };
@@ -23471,23 +23467,22 @@ __webpack_require__.r(__webpack_exports__);
     var upsertEventInformation = function upsertEventInformation() {
       form.post(route('events.upsert'), {
         errorBag: 'upsertEventInformation',
-        preserveScroll: true,
-        onSuccess: function onSuccess() {
-          return clearFrom();
-        }
+        preserveScroll: true // onSuccess: () => clearFrom(),
+
       });
     };
 
-    function clearFrom() {
-      form.reset();
+    function clearFrom() {// form.reset();
     }
 
     function updateFormValues() {
-      form.id = document.getElementById('id').value;
-      form.organizer_id = document.getElementById('organizer_id').value;
+      var time = document.getElementById('time').value;
+      var date = document.getElementById('date').value;
+      form.id = document.getElementById('id').value; // form.organizer_id = document.getElementById('organizer_id').value;
+
       form.name = document.getElementById('name').value;
       form.participants = document.getElementById('participants').value;
-      form.date = document.getElementById('date').value;
+      form.date = date + " " + time + ":00";
       form.dresscode = document.getElementById('dresscode').value;
       form.street = document.getElementById('street').value;
       form.zip = document.getElementById('zip').value;
@@ -27675,7 +27670,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $props.organizer_id = $event;
     }),
-    id: "organizer"
+    id: "organizer_id"
   }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.organizers, function (organizer, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       key: index,
@@ -27797,6 +27792,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , _hoisted_9), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
       href: "/events",
       method: "delete",
+      as: "button",
       data: {
         id: event.id
       }
@@ -28310,6 +28306,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , _hoisted_9), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
       href: "/organizers",
       method: "delete",
+      as: "button",
       data: {
         id: organizer.id
       }

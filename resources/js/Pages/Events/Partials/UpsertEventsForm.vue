@@ -29,20 +29,23 @@ const upsertEventInformation = () => {
     form.post(route('events.upsert'), {
         errorBag: 'upsertEventInformation',
         preserveScroll: true,
-        onSuccess: () => clearFrom(),
+        // onSuccess: () => clearFrom(),
     });
 };
 
 function clearFrom() {
-    form.reset();
+    // form.reset();
 }
 
 function updateFormValues() {
+    let time = document.getElementById('time').value;
+    let date = document.getElementById('date').value;
+
     form.id = document.getElementById('id').value;
-    form.organizer_id = document.getElementById('organizer_id').value;
+    // form.organizer_id = document.getElementById('organizer_id').value;
     form.name = document.getElementById('name').value;
     form.participants = document.getElementById('participants').value;
-    form.date = document.getElementById('date').value;
+    form.date = date + " " + time + ":00";
     form.dresscode = document.getElementById('dresscode').value;
     form.street = document.getElementById('street').value;
     form.zip = document.getElementById('zip').value;

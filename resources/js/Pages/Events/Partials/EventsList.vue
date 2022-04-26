@@ -6,15 +6,12 @@ const props = defineProps({
     organizers: Object,
 });
 
-function deleteEvent(id) {
-    form.post('events.delete');
-    console.log("removed this " + id);
-}
-
 const updateForm = (event) => {
     let time = event.date.split(' ')[1].split(':');
-    document.getElementById('organizer').value = event.organizer_id;
     document.getElementById('id').value = event.id;
+    console.log(event.organizer_id);
+    // console.log(document.getElementById('organizer_id').value);
+    document.getElementById('organizer_id').value = event.organizer_id;
     document.getElementById('name').value = event.name;
     document.getElementById('participants').value = event.participants;
     document.getElementById('date').value = event.date.split(' ')[0];
@@ -71,7 +68,7 @@ const updateForm = (event) => {
                     {{ event.date }}
                 </td>
                 <td class="px-3 py-3 flex justify-center items-center ">
-                    <Link href="/events" method="delete" :data="{ id: event.id }">
+                    <Link href="/events" method="delete" as="button" :data="{ id: event.id }">
                         <svg
                              xmlns="http://www.w3.org/2000/svg"
                              class="p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer"
