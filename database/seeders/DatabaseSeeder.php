@@ -14,10 +14,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-//            DancingLevelSeeder::class,
+            DancingLevelSeeder::class,
         ]);
 
-//        \App\Models\Organizer::factory(50)->create();
+        \App\Models\Organizer::factory(15)->create();
         \App\Models\Event::factory(50)->create();
     }
 }
