@@ -11,14 +11,14 @@ const props = defineProps({
 
 const form = useForm({
     id: null,
+    organizer_id: null,
     name: null,
-    email: null,
-    website: null,
-    uid_number: null,
+    participants: null,
+    date: null,
+    dresscode: null,
     street: null,
     zip: null,
     city: null,
-    phone: null,
     description: null,
 });
 

@@ -39,11 +39,10 @@ function clearFrom() {
 
 function updateFormValues() {
     form.id = document.getElementById('id').value;
-    form.organizer_id = document.getElementById('organizer').value;
+    form.organizer_id = document.getElementById('organizer_id').value;
     form.name = document.getElementById('name').value;
     form.participants = document.getElementById('participants').value;
     form.date = document.getElementById('date').value;
-    form.time = document.getElementById('time').value;
     form.dresscode = document.getElementById('dresscode').value;
     form.street = document.getElementById('street').value;
     form.zip = document.getElementById('zip').value;

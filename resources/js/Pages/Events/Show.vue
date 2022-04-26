@@ -1,6 +1,8 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import EventsList from "./Partials/EventsList";
 import UpsertEventsForm from "./Partials/UpsertEventsForm";
+import JetSectionBorder from '@/Jetstream/SectionBorder.vue';
 
 defineProps({
     events: Object,
@@ -18,6 +20,8 @@ defineProps({
 
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <UpsertEventsForm :organizers="$page.props.organizers" />
+            <JetSectionBorder />
+            <EventsList :events="$page.props.events" :organizers="$page.props.organizers" />
         </div>
 
     </AppLayout>

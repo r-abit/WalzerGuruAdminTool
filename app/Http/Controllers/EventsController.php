@@ -49,7 +49,11 @@ class EventsController extends Controller
 
     public function delete(Request $request): \Inertia\Response
     {
-        dd("TODO3");
+        Event::where('id', $request['id'])->delete();
+        return Jetstream::inertia()->render($request, 'Events/Show', [
+            'events' => Event::get()->toArray(),
+            'organizers' => Organizer::get()->toArray(),
+        ]);
     }
 
 }
