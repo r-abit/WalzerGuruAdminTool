@@ -23373,8 +23373,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
+    events: Object,
     organizers: Object
   },
   setup: function setup(__props, _ref) {
@@ -23382,22 +23385,31 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var props = __props;
 
-    var updateForm = function updateForm(organizer) {
-      document.getElementById('id').value = organizer.id;
-      document.getElementById('name').value = organizer.name;
-      document.getElementById('email').value = organizer.email;
-      document.getElementById('website').value = organizer.website;
-      document.getElementById('uid_number').value = organizer.uid_number;
-      document.getElementById('street').value = organizer.street;
-      document.getElementById('zip').value = organizer.zip;
-      document.getElementById('city').value = organizer.city;
-      document.getElementById('phone').value = organizer.phone;
-      document.getElementById('description').value = organizer.description;
+    function deleteEvent(id) {
+      form.post('events.delete');
+      console.log("removed this " + id);
+    }
+
+    var updateForm = function updateForm(event) {
+      var time = event.date.split(' ')[1].split(':');
+      document.getElementById('organizer').value = event.organizer_id;
+      document.getElementById('id').value = event.id;
+      document.getElementById('name').value = event.name;
+      document.getElementById('participants').value = event.participants;
+      document.getElementById('date').value = event.date.split(' ')[0];
+      document.getElementById('time').value = time[0] + ':' + time[1];
+      document.getElementById('dresscode').value = event.dresscode;
+      document.getElementById('street').value = event.street;
+      document.getElementById('zip').value = event.zip;
+      document.getElementById('city').value = event.city;
+      document.getElementById('description').value = event.description;
     };
 
     var __returned__ = {
       props: props,
-      updateForm: updateForm
+      deleteEvent: deleteEvent,
+      updateForm: updateForm,
+      Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.Link
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -23472,11 +23484,10 @@ __webpack_require__.r(__webpack_exports__);
 
     function updateFormValues() {
       form.id = document.getElementById('id').value;
-      form.organizer_id = document.getElementById('organizer').value;
+      form.organizer_id = document.getElementById('organizer_id').value;
       form.name = document.getElementById('name').value;
       form.participants = document.getElementById('participants').value;
       form.date = document.getElementById('date').value;
-      form.time = document.getElementById('time').value;
       form.dresscode = document.getElementById('dresscode').value;
       form.street = document.getElementById('street').value;
       form.zip = document.getElementById('zip').value;
@@ -23520,7 +23531,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout.vue */ "./resources/js/Layouts/AppLayout.vue");
-/* harmony import */ var _Partials_UpsertEventsForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Partials/UpsertEventsForm */ "./resources/js/Pages/Events/Partials/UpsertEventsForm.vue");
+/* harmony import */ var _Partials_EventsList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Partials/EventsList */ "./resources/js/Pages/Events/Partials/EventsList.vue");
+/* harmony import */ var _Partials_UpsertEventsForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Partials/UpsertEventsForm */ "./resources/js/Pages/Events/Partials/UpsertEventsForm.vue");
+/* harmony import */ var _Jetstream_SectionBorder_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/SectionBorder.vue */ "./resources/js/Jetstream/SectionBorder.vue");
+
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -23533,7 +23548,9 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var __returned__ = {
       AppLayout: _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-      UpsertEventsForm: _Partials_UpsertEventsForm__WEBPACK_IMPORTED_MODULE_1__["default"]
+      EventsList: _Partials_EventsList__WEBPACK_IMPORTED_MODULE_1__["default"],
+      UpsertEventsForm: _Partials_UpsertEventsForm__WEBPACK_IMPORTED_MODULE_2__["default"],
+      JetSectionBorder: _Jetstream_SectionBorder_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -23623,14 +23640,14 @@ __webpack_require__.r(__webpack_exports__);
     var props = __props;
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm)({
       id: null,
+      organizer_id: null,
       name: null,
-      email: null,
-      website: null,
-      uid_number: null,
+      participants: null,
+      date: null,
+      dresscode: null,
       street: null,
       zip: null,
       city: null,
-      phone: null,
       description: null
     });
 
@@ -27693,61 +27710,100 @@ var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
   "class": "border-b-0 text-left border-gray-300 bg-gray-200"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   "class": "px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
+}, " Event "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  "class": "px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
 }, " Veranstalter "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   "class": "px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
-}, " Straße mit Hausnummer "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+}, " Teilnehmer "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   "class": "px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
-}, " Postleitzahl "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+}, " Dresscode "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   "class": "px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
-}, " Ort "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  "class": "px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
-}, " Tel. "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  "class": "px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
-}, " E-Mail ")])], -1
+}, " Datum und Uhrzeit "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  "class": "px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider"
+}, " Löschen ")])], -1
 /* HOISTED */
 );
 
-var _hoisted_3 = ["onClick"];
-var _hoisted_4 = {
-  "class": "px-3 py-3"
+var _hoisted_3 = {
+  "class": "text-sm text-left border-b border-gray-200 hover:bg-gray-100"
 };
-var _hoisted_5 = {
-  "class": "px-3 py-3"
-};
-var _hoisted_6 = {
-  "class": "px-3 py-3"
-};
-var _hoisted_7 = {
-  "class": "px-3 py-3"
-};
-var _hoisted_8 = {
-  "class": "px-3 py-3"
-};
+var _hoisted_4 = ["onClick"];
+var _hoisted_5 = ["onClick"];
+var _hoisted_6 = ["onClick"];
+var _hoisted_7 = ["onClick"];
+var _hoisted_8 = ["onClick"];
 var _hoisted_9 = {
-  "class": "px-3 py-3"
+  "class": "px-3 py-3 flex justify-center items-center"
 };
+
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+  xmlns: "http://www.w3.org/2000/svg",
+  "class": "p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer",
+  fill: "none",
+  viewBox: "0 0 24 24",
+  stroke: "currentColor",
+  "stroke-width": "2"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+  "stroke-linecap": "round",
+  "stroke-linejoin": "round",
+  d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+})], -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.organizers, function (organizer) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.events, function (event) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
       onClick: function onClick($event) {
-        return $setup.updateForm(organizer);
-      },
-      "class": "text-sm text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100"
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.name), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.street), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.zip), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.city), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.phone), 1
-    /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.email), 1
-    /* TEXT */
-    )], 8
-    /* PROPS */
-    , _hoisted_3);
+        return $setup.updateForm(event);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.name), 9
+    /* TEXT, PROPS */
+    , _hoisted_4), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
+      onClick: function onClick($event) {
+        return $setup.updateForm(event);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.organizers[event.organizer_id - 1].name), 9
+    /* TEXT, PROPS */
+    , _hoisted_5), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
+      onClick: function onClick($event) {
+        return $setup.updateForm(event);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.participants), 9
+    /* TEXT, PROPS */
+    , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
+      onClick: function onClick($event) {
+        return $setup.updateForm(event);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.dresscode), 9
+    /* TEXT, PROPS */
+    , _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      "class": "px-3 py-3 cursor-pointer",
+      onClick: function onClick($event) {
+        return $setup.updateForm(event);
+      }
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.date), 9
+    /* TEXT, PROPS */
+    , _hoisted_8), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
+      href: "/events",
+      method: "delete",
+      data: {
+        id: event.id
+      }
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [_hoisted_10];
+      }),
+      _: 2
+      /* DYNAMIC */
+
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["data"])])]);
   }), 256
   /* UNKEYED_FRAGMENT */
   ))])]);
@@ -28121,7 +28177,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         organizers: _ctx.$page.props.organizers
       }, null, 8
       /* PROPS */
-      , ["organizers"])])];
+      , ["organizers"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetSectionBorder"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["EventsList"], {
+        events: _ctx.$page.props.events,
+        organizers: _ctx.$page.props.organizers
+      }, null, 8
+      /* PROPS */
+      , ["events", "organizers"])])];
     }),
     _: 1
     /* STABLE */
