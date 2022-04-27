@@ -20,6 +20,16 @@ const updateForm = (event) => {
     document.getElementById('city').value = event.city;
     document.getElementById('description').value = event.description;
 }
+
+const getOrganizer = (org_id) => {
+    var x;
+    props.organizers.some(
+        organizer => {
+            if (organizer.id === org_id) x = organizer.name;
+        }
+    );
+    return x;
+}
 </script>
 
 
@@ -53,8 +63,8 @@ const updateForm = (event) => {
                     {{ event.name }}
                 </td>
                 <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
-                    Need to be fixed
-<!--                    {{ props.organizers[event.organizer_id-1].name }}-->
+                    {{ getOrganizer(event.organizer_id) }}
+<!--                    {{ props.organizers[event.organizer_id].name }}-->
                 </td>
                 <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
                     {{ event.participants }}
@@ -66,7 +76,7 @@ const updateForm = (event) => {
                     {{ event.date }}
                 </td>
                 <td class="px-3 py-3 flex justify-center items-center ">
-                    <Link href="/events" method="delete" as="button" :data="{ id: event.id }">
+                    <Link href="/events" method="delete" as="button" preserve-scroll :data="{ id: event.id }">
                         <svg
                              xmlns="http://www.w3.org/2000/svg"
                              class="p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer"

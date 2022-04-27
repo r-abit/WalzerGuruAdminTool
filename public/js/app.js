@@ -23400,9 +23400,18 @@ __webpack_require__.r(__webpack_exports__);
       document.getElementById('description').value = event.description;
     };
 
+    var getOrganizer = function getOrganizer(org_id) {
+      var x;
+      props.organizers.some(function (organizer) {
+        if (organizer.id === org_id) x = organizer.name;
+      });
+      return x;
+    };
+
     var __returned__ = {
       props: props,
       updateForm: updateForm,
+      getOrganizer: getOrganizer,
       Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.Link
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
@@ -27674,6 +27683,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.organizers, function (organizer, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       key: index,
+      id: "organizer.name",
       value: organizer.id
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(organizer.name), 9
     /* TEXT, PROPS */
@@ -27727,17 +27737,14 @@ var _hoisted_3 = {
 };
 var _hoisted_4 = ["onClick"];
 var _hoisted_5 = ["onClick"];
-
-var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Need to be fixed ");
-
+var _hoisted_6 = ["onClick"];
 var _hoisted_7 = ["onClick"];
 var _hoisted_8 = ["onClick"];
-var _hoisted_9 = ["onClick"];
-var _hoisted_10 = {
+var _hoisted_9 = {
   "class": "px-3 py-3 flex justify-center items-center"
 };
 
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
   xmlns: "http://www.w3.org/2000/svg",
   "class": "p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer",
   fill: "none",
@@ -27766,7 +27773,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $setup.updateForm(event);
       }
-    }, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    {{ props.organizers[event.organizer_id-1].name }}")], 8
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.getOrganizer(event.organizer_id)), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    {{ props.organizers[event.organizer_id].name }}")], 8
     /* PROPS */
     , _hoisted_5), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
       "class": "px-3 py-3 cursor-pointer",
@@ -27775,30 +27784,31 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.participants), 9
     /* TEXT, PROPS */
-    , _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
       "class": "px-3 py-3 cursor-pointer",
       onClick: function onClick($event) {
         return $setup.updateForm(event);
       }
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.dresscode), 9
     /* TEXT, PROPS */
-    , _hoisted_8), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    , _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
       "class": "px-3 py-3 cursor-pointer",
       onClick: function onClick($event) {
         return $setup.updateForm(event);
       }
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(event.date), 9
     /* TEXT, PROPS */
-    , _hoisted_9), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
+    , _hoisted_8), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
       href: "/events",
       method: "delete",
       as: "button",
+      "preserve-scroll": "",
       data: {
         id: event.id
       }
     }, {
       "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-        return [_hoisted_11];
+        return [_hoisted_10];
       }),
       _: 2
       /* DYNAMIC */
@@ -28307,6 +28317,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       href: "/organizers",
       method: "delete",
       as: "button",
+      "preserve-scroll": "",
       data: {
         id: organizer.id
       }
