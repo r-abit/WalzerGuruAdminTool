@@ -108,7 +108,7 @@ function updateFormValues() {
                         id="dresscode"
                         v-model="form.dresscode"
                         type="text"
-                        class="mt-1 block w-full justify-self-end"
+                        class="mt-1 block w-full"
                         required
                     />
                     <JetInputError :message="form.errors.dresscode" class="mt-2" />
@@ -180,7 +180,7 @@ function updateFormValues() {
                 </div>
 
                 <!-- Description -->
-                <div class="col-span-5">
+                <div class="col-span-6">
                     <JetLabel for="description" value="Beschreibung" class="text-left"/>
                     <textarea
                         id="description"
@@ -192,7 +192,7 @@ function updateFormValues() {
                     <JetInputError :message="form.errors.description" class="mt-2" />
                 </div>
 
-                <div class="col-span-3 self-end mb-2">
+                <div class="col-span-2 self-end mb-2">
                     <JetActionMessage :on="form.recentlySuccessful" class="mr-3">
                         Gespeichert.
                     </JetActionMessage>

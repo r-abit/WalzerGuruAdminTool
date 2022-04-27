@@ -27660,7 +27660,7 @@ var _hoisted_1 = {
   "class": "flex justify-center mt-1"
 };
 var _hoisted_2 = {
-  "class": "mb-3 xl:w-96"
+  "class": "xl:w-96"
 };
 var _hoisted_3 = ["value"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -27864,10 +27864,10 @@ var _hoisted_13 = {
   "class": "col-span-2"
 };
 var _hoisted_14 = {
-  "class": "col-span-5"
+  "class": "col-span-6"
 };
 var _hoisted_15 = {
-  "class": "col-span-3 self-end mb-2"
+  "class": "col-span-2 self-end mb-2"
 };
 
 var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Gespeichert. ");
@@ -27988,7 +27988,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $setup.form.dresscode = $event;
     }),
     type: "text",
-    "class": "mt-1 block w-full justify-self-end",
+    "class": "mt-1 block w-full",
     required: ""
   }, null, 8
   /* PROPS */
