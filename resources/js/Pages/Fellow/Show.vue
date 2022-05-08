@@ -1,13 +1,10 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import JetSectionBorder from '@/Jetstream/SectionBorder.vue';
-import OrganizerList from '@/Pages/Organizer/Partials/OrganizerList.vue';
-import UpsertOrganizerForm from '@/Pages/Organizer/Partials/UpsertOrganizerForm.vue';
+import EventRegistration from '@/Pages/Fellow/Partials/EventRegistration.vue'
 
-defineProps({
-    user: Object,
-    organizers: Object,
+const props = defineProps({
 });
+
 </script>
 
 <template>
@@ -19,7 +16,7 @@ defineProps({
         </template>
 
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aut blanditiis et iusto labore laboriosam magnam minus natus, officia optio provident ratione reiciendis, reprehenderit repudiandae tempore totam unde vitae, voluptatibus?
+            <EventRegistration />
         </div>
 
     </AppLayout>
