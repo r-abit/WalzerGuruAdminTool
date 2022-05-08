@@ -5,7 +5,7 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetInputError from '@/Jetstream/InputError.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetActionMessage from '@/Jetstream/ActionMessage.vue';
-import EventSelection from '@/Pages/Events/Partials/EventSelection.vue';
+import OrganizerSelection from '@/Pages/Events/Partials/OrganizerSelection.vue';
 
 const props = defineProps({
     organizers: Object,
@@ -84,7 +84,7 @@ function updateFormValues() {
                 <!-- Organizer selection -->
                 <div class="col-span-2">
                     <JetLabel for="name" value="Veranstalter" class="text-left"/>
-                    <EventSelection :organizers="$page.props.organizers" :organizer_id="form.organizer_id" />
+                    <OrganizerSelection :organizers="$page.props.organizers" :organizer_id="form.organizer_id" />
                     <JetInputError :message="form.errors.name" class="mt-2" />
                 </div>
 
