@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\OrganizerController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\FellowController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\OrganizerController;
 use Inertia\Inertia;
 
 /*
@@ -45,6 +46,10 @@ Route::middleware([
         Route::get('/events', 'show')->name('events.show');
         Route::post('/events', 'upsert')->name('events.upsert');
         Route::delete('/events', 'delete')->name('events.delete');
+    });
+
+    Route::controller(FellowController::class)->group(function () {
+        Route::get('/fellow', 'show')->name('fellow.show');
     });
 });
 
