@@ -84,7 +84,7 @@ function updateFormValues() {
                 <!-- Organizer selection -->
                 <div class="col-span-2">
                     <JetLabel for="name" value="Veranstalter" class="text-left"/>
-                    <OrganizerSelection :organizers="$page.props.organizers" :organizer_id="form.organizer_id" />
+                    <OrganizerSelection :user="$page.props.user" :organizers="$page.props.organizers" :organizer_id="form.organizer_id" />
                     <JetInputError :message="form.errors.name" class="mt-2" />
                 </div>
 
