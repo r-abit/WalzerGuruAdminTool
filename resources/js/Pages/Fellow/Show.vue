@@ -1,6 +1,5 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import EventRegistration from '@/Pages/Fellow/Partials/EventRegistration.vue'
 
 const props = defineProps({
 });
@@ -16,7 +15,6 @@ const props = defineProps({
         </template>
 
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <EventRegistration />
         </div>
 
     </AppLayout>
