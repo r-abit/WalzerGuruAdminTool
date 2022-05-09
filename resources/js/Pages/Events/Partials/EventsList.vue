@@ -64,7 +64,7 @@ onMounted(() => {
                 <th class="px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Datum und Uhrzeit
                 </th>
-                <th class="px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider">
+                <th v-if="$page.props.user.role !== 'user'" class="px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider">
                     Löschen
                 </th>
             </tr>
@@ -86,7 +86,7 @@ onMounted(() => {
                 <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
                     {{ event.date }}
                 </td>
-                <td class="px-3 py-3 flex justify-center items-center ">
+                <td v-if="$page.props.user.role !== 'user'" class="px-3 py-3 flex justify-center items-center ">
                     <Link href="/events" method="delete" as="button" preserve-scroll :data="{ id: event.id }">
                         <svg
                              xmlns="http://www.w3.org/2000/svg"
