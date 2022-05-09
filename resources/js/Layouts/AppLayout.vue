@@ -52,7 +52,7 @@ const logout = () => {
                                 <JetNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </JetNavLink>
-                                <JetNavLink :href="route('organizers.show')" :active="route().current('organizers.show')">
+                                <JetNavLink v-if="$page.props.user.role === 'admin'" :href="route('organizers.show')" :active="route().current('organizers.show')">
                                     Veranstalter
                                 </JetNavLink>
                                 <JetNavLink :href="route('events.show')" :active="route().current('events.show')">
