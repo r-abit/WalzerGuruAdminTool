@@ -32,7 +32,6 @@ const getOrganizer = (org_id) => {
 }
 </script>
 
-
 <template>
     <table class="mt-5 md:mt-0 md:col-span-2 px-4 py-3 bg-gray-50 sm:px-6 shadow sm:rounded-md sm:rounded-md min-w-full leading-normal">
         <thead>

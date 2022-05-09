@@ -3,11 +3,22 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import EventsList from "./Partials/EventsList";
 import UpsertEventsForm from "./Partials/UpsertEventsForm";
 import JetSectionBorder from '@/Jetstream/SectionBorder.vue';
+import {onMounted} from "vue";
 
-defineProps({
+const props = defineProps({
+    user: Object,
     events: Object,
     organizers: Object,
 });
+
+onMounted(() => {
+    console.log(props.user.organizer_id);
+    props.events.forEach(function (item, array){
+        console.log(item.organizer_id);
+    });
+
+    props.events = props.events.filter(item => item.organizer_id === props.user.organizer_id);
+})
 </script>
 
 <template>
@@ -21,7 +32,12 @@ defineProps({
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <UpsertEventsForm :organizers="$page.props.organizers" />
             <JetSectionBorder />
-            <EventsList :events="$page.props.events" :organizers="$page.props.organizers" />
+            <EventsList v-if="$page.props.user.role === 'organizer'"
+                        :events="$page.props.events.filter(i => i.organizer_id === props.user.organizer_id)"
+                        :organizers="$page.props.organizers" />
+            <EventsList v-else
+                        :events="$page.props.events"
+                        :organizers="$page.props.organizers" />
         </div>
 
     </AppLayout>
