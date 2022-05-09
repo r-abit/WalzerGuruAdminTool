@@ -10,15 +10,6 @@ const props = defineProps({
     events: Object,
     organizers: Object,
 });
-
-onMounted(() => {
-    console.log(props.user.organizer_id);
-    props.events.forEach(function (item, array){
-        console.log(item.organizer_id);
-    });
-
-    props.events = props.events.filter(item => item.organizer_id === props.user.organizer_id);
-})
 </script>
 
 <template>
@@ -37,9 +28,11 @@ onMounted(() => {
                                class="mb-5" />
 
             <EventsList v-if="$page.props.user.role === 'organizer'"
+                        :user="$page.props.user"
                         :events="$page.props.events.filter(i => i.organizer_id === props.user.organizer_id)"
                         :organizers="$page.props.organizers" />
             <EventsList v-else
+                        :user="$page.props.user"
                         :events="$page.props.events"
                         :organizers="$page.props.organizers" />
         </div>

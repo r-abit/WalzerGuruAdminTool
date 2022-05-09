@@ -1,12 +1,19 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3'
+import {onMounted} from "vue";
 
 const props = defineProps({
+    user: Object,
     events: Object,
     organizers: Object,
 });
 
 const updateForm = (event) => {
+    if (props.user.role === 'user') {
+        document.getElementById('eventList').value = event.id;
+        return;
+    }
+
     let time = event.date.split(' ')[1].split(':');
     document.getElementById('id').value = event.id;
     document.getElementById('organizer_id').value = event.organizer_id;
@@ -30,6 +37,12 @@ const getOrganizer = (org_id) => {
     );
     return x;
 }
+
+onMounted(() => {
+    if (props.user.role === 'user') {
+        document.querySelector('#eventList').options[0].selected = true;
+    }
+})
 </script>
 
 <template>
@@ -63,7 +76,6 @@ const getOrganizer = (org_id) => {
                 </td>
                 <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
                     {{ getOrganizer(event.organizer_id) }}
-<!--                    {{ props.organizers[event.organizer_id].name }}-->
                 </td>
                 <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
                     {{ event.participants }}
