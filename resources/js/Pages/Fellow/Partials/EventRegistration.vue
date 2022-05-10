@@ -1,11 +1,14 @@
 <script setup>
-import EventSelection from '@/Pages/Fellow/Partials/EventSelection.vue';
-import Switch from '@/Pages/Fellow/Partials/Switch.vue';
-import JetButton from '@/Jetstream/Button.vue';
+import EventSelection from '@/Pages/Fellow/Partials/EventSelection.vue'
+import Switch from '@/Pages/Fellow/Partials/Switch.vue'
+import JetButton from '@/Jetstream/Button.vue'
+import { Inertia } from '@inertiajs/inertia'
 
 const props = defineProps({
     user: Object,
     events: Object,
+    error: String,
+    success: String,
     selectedEvent: Number,
     ageImportant: Boolean,
     heightImportant: Boolean,
@@ -13,16 +16,21 @@ const props = defineProps({
 });
 
 function registerEvent() {
-    console.log('event ID: ' + document.querySelector('#eventList').options[document.querySelector('#eventList').selectedIndex].value);
-    console.log('ageImportant: ' + props.ageImportant);
-    console.log('heightImportant: ' + props.heightImportant);
-    console.log('levelImportant: ' + props.levelImportant);
+    let event_id = document.querySelector('#eventList').options[document.querySelector('#eventList').selectedIndex].value;
+    Inertia.post(route('event.participation'), {
+        'event_id': parseInt(event_id),
+        'age': props.ageImportant,
+        'height': props.heightImportant,
+        'level': props.levelImportant,
+    });
 }
 </script>
 
 <template>
     <div class="px-4 py-3 bg-gray-50 sm:px-6 shadow sm:rounded-md sm:rounded-md">
         <EventSelection :events="$page.props.events" :selectedEvent="$page.props.selectedEvent" />
+        <span v-if="$page.props.error !== ''" class="font-semibold">{{ $page.props.error }}</span>
+        <span v-if="$page.props.success !== ''" class="font-semibold">{{ $page.props.success }}</span>
         <div class="pt-5">
             <span>Bitte geben Sie Ihre Präferenzen an.</span>
             <div class="grid grid-cols-3 gap-4 pt-2 items-center">

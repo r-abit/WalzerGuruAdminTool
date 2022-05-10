@@ -46,6 +46,7 @@ Route::middleware([
         Route::get('/events', 'show')->name('events.show');
         Route::post('/events', 'upsert')->name('events.upsert');
         Route::delete('/events', 'delete')->name('events.delete');
+        Route::post('/event/participate', 'participate')->name('event.participation');
     });
 
     Route::controller(FellowController::class)->group(function () {
