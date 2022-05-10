@@ -22,7 +22,7 @@ class EventFactory extends Factory
             'organizer_id' => rand(1,Organizer::count()),
             'name' => $this->faker->company() . ' ' . $this->faker->companySuffix(),
             'participants' => rand(100, 400) * 2,
-            'date' => date('Y-m-d H:i:s', rand(strtotime("+1 Months"), strtotime("+6 Months"))),
+            'date' => date('Y-m-d H:i:s', rand(strtotime("-1 Months"), strtotime("+6 Months"))),
             'dresscode' => uniqid(),
             'street' => $this->faker->streetAddress(),
             'zip' => $this->faker->postcode(),

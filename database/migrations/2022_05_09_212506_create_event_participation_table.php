@@ -31,10 +31,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('event_participation', function (Blueprint $table) {
-            $table->dropForeign('event_participation_event_id_foreign');
-            $table->dropForeign('event_participation_event_id_foreign');
+        Schema::table('event_participations', function (Blueprint $table) {
+            $table->dropForeign('event_participations_event_id_foreign');
+            $table->dropForeign('event_participations_user_id_foreign');
         });
-        Schema::dropIfExists('event_participation');
+        Schema::dropIfExists('event_participations');
     }
 };

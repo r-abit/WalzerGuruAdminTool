@@ -13,12 +13,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            DancingLevelSeeder::class,
-        ]);
-
         \App\Models\Organizer::factory(15)->create();
         \App\Models\Event::factory(50)->create();
-        \App\Models\User::factory(50)->create();
+
+        $this->call([
+            DancingLevelSeeder::class,
+            UserSeeder::class,
+        ]);
+
+        \App\Models\User::factory(297)->create();
+        \App\Models\EventParticipation::factory(1000)->create();
     }
 }
