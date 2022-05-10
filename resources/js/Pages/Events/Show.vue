@@ -3,7 +3,6 @@ import EventRegistration from '@/Pages/Fellow/Partials/EventRegistration.vue'
 import UpsertEventsForm from "./Partials/UpsertEventsForm";
 import AppLayout from '@/Layouts/AppLayout.vue';
 import EventsList from "./Partials/EventsList";
-import {onMounted} from "vue";
 
 const props = defineProps({
     user: Object,
