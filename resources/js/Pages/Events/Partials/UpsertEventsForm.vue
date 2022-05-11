@@ -5,7 +5,7 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetInputError from '@/Jetstream/InputError.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetActionMessage from '@/Jetstream/ActionMessage.vue';
-import OrganizerSelection from '@/Pages/Events/Partials/OrganizerSelection.vue';
+import OrganizerSelection from '@/Pages/Organizer/Partials/OrganizerSelection.vue';
 
 const props = defineProps({
     organizers: Object,

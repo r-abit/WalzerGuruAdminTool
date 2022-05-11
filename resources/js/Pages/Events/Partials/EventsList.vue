@@ -6,9 +6,13 @@ const props = defineProps({
     user: Object,
     events: Object,
     organizers: Object,
+    clickable: Boolean,
+    deletable: Boolean,
 });
 
 const updateForm = (event) => {
+    if (!props.clickable) return;
+
     if (props.user.role === 'user') {
         document.getElementById('eventList').value = event.id;
         return;
@@ -37,11 +41,12 @@ const getOrganizer = (org_id) => {
     );
     return x;
 }
+onMounted( () => {
 
-onMounted(() => {
-    if (props.user.role === 'user') {
-        document.querySelector('#eventList').options[0].selected = true;
-    }
+    console.log('-------------');
+    console.log(props.clickable.toString());
+    console.log(props.deletable.toString());
+    console.log('-------------');
 })
 </script>
 
@@ -64,30 +69,33 @@ onMounted(() => {
                 <th class="px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Datum und Uhrzeit
                 </th>
-                <th v-if="$page.props.user.role !== 'user'" class="px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider">
+                <th class="px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider">
                     Löschen
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="event in events" class="text-sm text-left border-b border-gray-200 hover:bg-gray-100">
-                <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
+            <tr v-for="event in events"
+                class="text-sm text-left border-b border-gray-200 hover:bg-gray-100"
+                :class="[props.clickable ? 'cursor-pointer' : 'cursor-default']"
+            >
+                <td class="px-3 py-3" @click="updateForm(event)">
                     {{ event.name }}
                 </td>
-                <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
+                <td class="px-3 py-3" @click="updateForm(event)">
                     {{ getOrganizer(event.organizer_id) }}
                 </td>
-                <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
+                <td class="px-3 py-3" @click="updateForm(event)">
                     {{ event.participants }}
                 </td>
-                <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
+                <td class="px-3 py-3" @click="updateForm(event)">
                     {{ event.dresscode }}
                 </td>
-                <td class="px-3 py-3 cursor-pointer" @click="updateForm(event)">
+                <td class="px-3 py-3" @click="updateForm(event)">
                     {{ event.date }}
                 </td>
-                <td v-if="$page.props.user.role !== 'user'" class="px-3 py-3 flex justify-center items-center ">
-                    <Link href="/events" method="delete" as="button" preserve-scroll :data="{ id: event.id }">
+                <td class="px-3 py-3 flex justify-center items-center cursor-default">
+                    <Link href="/events" method="delete" as="button" preserve-scroll :data="{ id: event.id, user:props.user }">
                         <svg
                              xmlns="http://www.w3.org/2000/svg"
                              class="p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer"

@@ -1,6 +1,6 @@
 <script setup>
-import EventSelection from '@/Pages/Dancing/Partials/EventSelection.vue'
-import Switch from '@/Pages/Dancing/Partials/Switch.vue'
+import EventSelection from '@/Pages/Events/Partials/EventSelection.vue'
+import Switch from '@/Pages/Events/Partials/Switch.vue'
 import JetButton from '@/Jetstream/Button.vue'
 import { Inertia } from '@inertiajs/inertia'
 

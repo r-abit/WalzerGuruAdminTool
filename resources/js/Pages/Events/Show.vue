@@ -1,14 +1,21 @@
 <script setup>
-import EventRegistration from '@/Pages/Fellow/Partials/EventRegistration.vue'
+import EventRegistration from './Partials/EventRegistration.vue'
 import UpsertEventsForm from "./Partials/UpsertEventsForm";
 import AppLayout from '@/Layouts/AppLayout.vue';
 import EventsList from "./Partials/EventsList";
+import {onMounted} from "vue";
 
 const props = defineProps({
     user: Object,
     events: Object,
     organizers: Object,
 });
+
+onMounted(() => {
+    if (props.user.role === 'user') {
+        document.querySelector('#eventList').options[0].selected = true;
+    }
+})
 </script>
 
 <template>
@@ -26,13 +33,11 @@ const props = defineProps({
             <EventRegistration v-else
                                class="mb-5" />
 
-            <EventsList v-if="$page.props.user.role === 'organizer'"
-                        :user="$page.props.user"
-                        :events="$page.props.events.filter(i => i.organizer_id === props.user.organizer_id)"
-                        :organizers="$page.props.organizers" />
-            <EventsList v-else
+            <EventsList
                         :user="$page.props.user"
                         :events="$page.props.events"
+                        :clickable="$page.props.user.role !== 'user'"
+                        :deletable="$page.props.user.role !== 'user'"
                         :organizers="$page.props.organizers" />
         </div>
 

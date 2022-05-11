@@ -9,7 +9,6 @@ use App\Models\EventParticipation;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Http\Request;
 use App\Models\Organizer;
-use http\Env\Response;
 use App\Models\Event;
 use App\Models\User;
 
@@ -40,7 +39,9 @@ class EventsController extends Controller
     public function show(Request $request): \Inertia\Response
     {
         return Jetstream::inertia()->render($request, 'Events/Show', [
-            'events' => $this->getUnparticipatedEvents(),
+            'events' => Auth::user()->role == 'organizer'
+                ? Auth::user()->organizer->events->toArray()
+                : $this->getUnparticipatedEvents(),
             'organizers' => Organizer::get()->toArray(),
         ]);
     }
@@ -75,6 +76,7 @@ class EventsController extends Controller
 
     public function delete(Request $request): \Inertia\Response
     {
+        dd($request->all());
         Event::where('id', $request['id'])->delete();
         return Jetstream::inertia()->render($request, 'Events/Show', [
             'events' => Event::get()->toArray(),

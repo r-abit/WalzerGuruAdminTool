@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\OrganizerController;
+use App\Http\Controllers\DancingController;
 use App\Http\Controllers\EventsController;
-use App\Http\Controllers\FellowController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -49,8 +49,8 @@ Route::middleware([
         Route::post('/event/participate', 'participate')->name('event.participation');
     });
 
-    Route::controller(FellowController::class)->group(function () {
-        Route::get('/fellow', 'show')->name('fellow.show');
+    Route::controller(DancingController::class)->group(function () {
+        Route::get('/dancing', 'show')->name('dancing.show');
     });
 });
 
