@@ -19,4 +19,7 @@ class Organizer extends Authenticatable
 
     protected $guarded = [];
 
+    public function events() {
+        return $this->hasMany(Event::class);
+    }
 }
