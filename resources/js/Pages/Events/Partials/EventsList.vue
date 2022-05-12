@@ -1,6 +1,5 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3'
-import {onMounted} from "vue";
 
 const props = defineProps({
     user: Object,
@@ -41,13 +40,6 @@ const getOrganizer = (org_id) => {
     );
     return x;
 }
-onMounted( () => {
-
-    console.log('-------------');
-    console.log(props.clickable);
-    console.log(props.deletable);
-    console.log('-------------');
-})
 </script>
 
 <template>
@@ -98,8 +90,11 @@ onMounted( () => {
                     {{ event.date }}
                 </td>
                 <td v-if="props.deletable" class="px-3 py-3 flex justify-center items-center cursor-default">
-                    <Link :href='(props.user.role === "user") ? "/dancing" :  "/events"' method="delete" as="button" preserve-scroll :data="{ id: event.id, user:props.user }">
-<!--                    <Link :href="/events" method="delete" as="button" preserve-scroll :data="{ id: event.id, user:props.user }">-->
+                    <Link :href='(props.user.role === "user") ? "/dancing" :  "/events"'
+                          method="delete"
+                          as="button"
+                          preserve-scroll
+                          :data="{ id: event.id, user:props.user }">
                         <svg
                              xmlns="http://www.w3.org/2000/svg"
                              class="p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer"

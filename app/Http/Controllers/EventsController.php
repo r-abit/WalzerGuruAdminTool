@@ -38,6 +38,7 @@ class EventsController extends Controller
 
     public function show(Request $request): \Inertia\Response
     {
+
         return Jetstream::inertia()->render($request, 'Events/Show', [
             'events' => Auth::user()->role == 'organizer'
                 ? Auth::user()->organizer->events->toArray()
