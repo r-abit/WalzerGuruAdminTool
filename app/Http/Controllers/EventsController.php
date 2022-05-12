@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\EventParticipation;
+use Inertia\Response;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Http\Request;
 use App\Models\Organizer;
@@ -76,8 +76,19 @@ class EventsController extends Controller
 
     public function delete(Request $request): \Inertia\Response
     {
-        dd($request->all());
-        Event::where('id', $request['id'])->delete();
+        if (Auth::user()->role == 'user') {
+            EventParticipation::where('user_id', Auth::id())
+                ->where('event_id', $request->id)
+                ->delete();
+
+            return Jetstream::inertia()->render($request, 'Dancing/Show', [
+                'events' => Auth::user()->events,
+                'organizers' => Organizer::get()->toArray(),
+            ]);
+        }
+        else {
+            Event::where('id', $request['id'])->delete();
+        }
         return Jetstream::inertia()->render($request, 'Events/Show', [
             'events' => Event::get()->toArray(),
             'organizers' => Organizer::get()->toArray(),
@@ -108,7 +119,6 @@ class EventsController extends Controller
                                                 ->get();
         $possible_message = (sizeOf($exists_already) == 0) ? '' : 'You are already registred';
         $max_available_spot = Event::where('id', $request->event_id)->first()->participants;
-        $user = User::where('id', Auth::id())->first();
         $participating_male = sizeof(User::where('gender', 'male')->get());
         $participating_female = sizeof(User::where('gender', 'female')->get());
 

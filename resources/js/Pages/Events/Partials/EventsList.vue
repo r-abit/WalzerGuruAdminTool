@@ -44,8 +44,8 @@ const getOrganizer = (org_id) => {
 onMounted( () => {
 
     console.log('-------------');
-    console.log(props.clickable.toString());
-    console.log(props.deletable.toString());
+    console.log(props.clickable);
+    console.log(props.deletable);
     console.log('-------------');
 })
 </script>
@@ -69,8 +69,11 @@ onMounted( () => {
                 <th class="px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Datum und Uhrzeit
                 </th>
-                <th class="px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider">
+                <th v-if="props.deletable && props.user.role !== 'user'" class="px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider">
                     Löschen
+                </th>
+                <th v-else-if="props.deletable && props.user.role === 'user'" class="px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider">
+                    Abmelden
                 </th>
             </tr>
         </thead>
@@ -94,8 +97,9 @@ onMounted( () => {
                 <td class="px-3 py-3" @click="updateForm(event)">
                     {{ event.date }}
                 </td>
-                <td class="px-3 py-3 flex justify-center items-center cursor-default">
-                    <Link href="/events" method="delete" as="button" preserve-scroll :data="{ id: event.id, user:props.user }">
+                <td v-if="props.deletable" class="px-3 py-3 flex justify-center items-center cursor-default">
+                    <Link :href='(props.user.role === "user") ? "/dancing" :  "/events"' method="delete" as="button" preserve-scroll :data="{ id: event.id, user:props.user }">
+<!--                    <Link :href="/events" method="delete" as="button" preserve-scroll :data="{ id: event.id, user:props.user }">-->
                         <svg
                              xmlns="http://www.w3.org/2000/svg"
                              class="p-1 rounded-full h-7 w-7 hover:bg-red-300 cursor-pointer"
@@ -106,7 +110,8 @@ onMounted( () => {
                                 <path
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                />
                         </svg>
                     </Link>
                 </td>

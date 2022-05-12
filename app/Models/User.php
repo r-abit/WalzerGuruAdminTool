@@ -66,4 +66,9 @@ class User extends Authenticatable
     public function organizer() {
         return $this->belongsTo(Organizer::class);
     }
+
+    public function events()
+    {
+        return $this->hasMany(EventParticipation::class);
+    }
 }

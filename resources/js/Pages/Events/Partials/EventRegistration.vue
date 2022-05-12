@@ -17,12 +17,17 @@ const props = defineProps({
 
 function registerEvent() {
     let event_id = document.querySelector('#eventList').options[document.querySelector('#eventList').selectedIndex].value;
-    Inertia.post(route('event.participation'), {
-        'event_id': parseInt(event_id),
-        'age': props.ageImportant,
-        'height': props.heightImportant,
-        'level': props.levelImportant,
-    });
+    Inertia.visit('/event/participate', {
+        method: 'post',
+        data: {
+            'event_id': parseInt(event_id),
+            'age': props.ageImportant,
+            'height': props.heightImportant,
+            'level': props.levelImportant,
+        },
+        replace: true,
+        preserveState: false,
+    })
 }
 </script>
 

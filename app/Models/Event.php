@@ -16,9 +16,4 @@ class Event extends Model
         return $this->hasOne(Organizer::class, 'id', 'organizer_id');
     }
 
-    public function participants()
-    {
-        return $this->hasMany(EventParticipation::class);
-    }
-
 }
