@@ -23,14 +23,14 @@ const props = defineProps({
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <p class="text-sm font-semibold text-gray-600 uppercase pl-2 pb-2">Aktuelle Anmeldungen</p>
             <EventsList :user="$page.props.user"
-                        :events="$page.props.previous_events"
+                        :events="$page.props.upcoming_events"
                         :organizers="$page.props.organizers"
                         :deletable="true"
                         class="mb-5" />
 
             <p class="text-sm font-semibold text-gray-600 uppercase pl-2 pb-2">Vergangene Events</p>
             <EventsList :user="$page.props.user"
-                        :events="$page.props.upcoming_events"
+                        :events="$page.props.previous_events"
                         :organizers="$page.props.organizers"
                         :deletable="false" />
         </div>
