@@ -42,6 +42,10 @@ class DancingController extends Controller
 
      public function delete(Request $request): Response
      {
+         EventParticipation::where('event_id', $request->id)
+             ->where('user_id', Auth::id())
+             ->delete();
+
          $events = array();
          foreach (Auth::user()->events as $user_event)
              $events[] = $user_event->event->toArray();
@@ -60,18 +64,11 @@ class DancingController extends Controller
                  $previous_events[] = $event;
          }
 
-         EventParticipation::where('event_id', $request->id)
-             ->where('user_id', Auth::id())
-             ->delete();
-
-         $events = array();
-         foreach (Auth::user()->events as $user_event) $events[] = $user_event->event->toArray();
-
          return Jetstream::inertia()->render($request, 'Dancing/Show', [
-            'events' => $events,
-            'previous_events' => $previous_events,
-            'upcoming_events' => $upcoming_events,
-            'organizers' => Organizer::get()->toArray(),
+             'organizers' => Organizer::get()->toArray(),
+             'previous_events' => $previous_events,
+             'upcoming_events' => $upcoming_events,
+             'events' => $events,
         ]);
      }
 

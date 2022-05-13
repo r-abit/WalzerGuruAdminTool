@@ -2,11 +2,11 @@
 import { Link } from '@inertiajs/inertia-vue3'
 
 const props = defineProps({
-    user: Object,
-    events: Object,
-    organizers: Object,
     clickable: Boolean,
     deletable: Boolean,
+    organizers: Object,
+    events: Object,
+    user: Object,
 });
 
 const updateForm = (event) => {
