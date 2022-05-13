@@ -32,7 +32,7 @@ class EventsController extends Controller
                     if ($event['id'] == $user_event->event_id) $found = true;
                 }
                 if (!$found) {
-                    array_push($temp, $event);
+                    $temp[] = $event;
                 }
             }
             $events = $temp;
@@ -40,7 +40,7 @@ class EventsController extends Controller
         return $events;
     }
 
-    public function show(Request $request): \Inertia\Response
+    public function show(Request $request): Response
     {
 
         return Jetstream::inertia()->render($request, 'Events/Show', [
@@ -51,7 +51,7 @@ class EventsController extends Controller
         ]);
     }
 
-    public function upsert(Request $request): \Inertia\Response
+    public function upsert(Request $request): Response
     {
         Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
@@ -79,7 +79,7 @@ class EventsController extends Controller
         ]);
     }
 
-    public function delete(Request $request): \Inertia\Response
+    public function delete(Request $request): Response
     {
         if (Auth::user()->role == 'user') {
             EventParticipation::where('user_id', Auth::id())
@@ -123,12 +123,10 @@ class EventsController extends Controller
             ]);
         }
 
-        $possible_message = false;
-
         $exists_already = EventParticipation::where('event_id', $request->event_id)
                                                 ->where('user_id', Auth::id())
                                                 ->get();
-        $possible_message = (sizeOf($exists_already) == 0) ? '' : 'You are already registred';
+        $possible_message = (sizeOf($exists_already) == 0) ? '' : 'You are already registered';
         $max_available_spot = Event::where('id', $request->event_id)->first()->participants;
         $participating_male = sizeof(User::where('gender', 'male')->get());
         $participating_female = sizeof(User::where('gender', 'female')->get());
