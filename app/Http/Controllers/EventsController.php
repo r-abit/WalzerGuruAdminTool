@@ -18,7 +18,11 @@ class EventsController extends Controller
     public function getUnparticipatedEvents()
     {
         $user = User::where('id',Auth::id())->first();
-        $events = Event::get()->toArray();
+        if ($user->role == 'organizer')
+            $events = $user->organizer->events;
+        else
+            $events = Event::get()->toArray();
+
         if ($user->role == 'user') {
             $temp = array();
             $user_events = EventParticipation::where('user_id', Auth::id())->get();
@@ -90,8 +94,14 @@ class EventsController extends Controller
         else {
             Event::where('id', $request['id'])->delete();
         }
+
+        if (Auth::user()->role == 'organizer')
+            $events = Auth::user()->organizer->events;
+        else
+            $events = Event::get()->toArray();
+
         return Jetstream::inertia()->render($request, 'Events/Show', [
-            'events' => Event::get()->toArray(),
+            'events' => $events,
             'organizers' => Organizer::get()->toArray(),
         ]);
     }
