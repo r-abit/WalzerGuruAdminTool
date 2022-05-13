@@ -32,7 +32,7 @@ const props = defineProps({
             <EventsList :user="$page.props.user"
                         :events="$page.props.previous_events"
                         :organizers="$page.props.organizers"
-                        :deletable="true" />
+                        />
         </div>
 
     </AppLayout>
