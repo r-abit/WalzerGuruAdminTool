@@ -3,6 +3,7 @@ import EventSelection from '@/Pages/Events/Partials/EventSelection.vue'
 import Switch from '@/Pages/Events/Partials/Switch.vue'
 import JetButton from '@/Jetstream/Button.vue'
 import { Inertia } from '@inertiajs/inertia'
+import {onBeforeMount, onMounted} from "vue";
 
 const props = defineProps({
     user: Object,
@@ -29,6 +30,26 @@ function registerEvent() {
         preserveState: false,
     })
 }
+
+var vars = {
+    accessible: true,
+}
+
+onBeforeMount(() =>{
+    if (props.user.height === null
+        || props.user.birthday === null
+        || props.user.dancing_level === null
+    ) {
+        console.log('_--------------------___');
+        console.log(vars.accessible);
+        vars.accessible = false;
+        console.log(vars.accessible);
+        console.log('_--------------------___');
+    }
+    console.log(props.user.birthday);
+    console.log(props.user.height);
+    console.log(props.user.dancing_level);
+})
 </script>
 
 <template>
@@ -54,8 +75,11 @@ function registerEvent() {
                     <Switch v-model:checked="levelImportant"/>
                 </div>
                 <div class="col-start-3 col-end-4 justify-self-end">
-                    <JetButton @click="registerEvent">
+                    <JetButton v-if="vars.accessible" @click="registerEvent">
                         <span>Speichern</span>
+                    </JetButton>
+                    <JetButton v-else class="bg-gray-700 active:bg-gray-700 hover:bg-gray-700 hover:cursor-default" >
+                        <span>Bitte Profile ergänzen!</span>
                     </JetButton>
                 </div>
             </div>

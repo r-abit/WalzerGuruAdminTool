@@ -31,6 +31,7 @@ onMounted(() => {
                               :organizers="$page.props.organizers"
                               class="mb-5" />
             <EventRegistration v-else
+                               :user="$page.props.user"
                                class="mb-5" />
 
             <EventsList

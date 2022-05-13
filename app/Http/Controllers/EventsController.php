@@ -136,6 +136,11 @@ class EventsController extends Controller
         }
         elseif (($max_available_spot/2) <= $participating_female){
             $possible_message = 'No available spot for female';
+        } elseif (Auth::user()->height == null
+            || Auth::user()->birthday == null
+            || Auth::user()->dancing_level == null
+        ) {
+            $possible_message = 'You can try to foul the front-end but never the backend ;)';
         }
 
         if($possible_message) {
