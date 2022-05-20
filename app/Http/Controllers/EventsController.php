@@ -113,6 +113,7 @@ class EventsController extends Controller
             'age' => ['required', 'boolean'],
             'height' => ['required', 'boolean'],
             'level' => ['required', 'boolean'],
+            'previous_dancer' => ['required', 'boolean'],
         ]);
 
         if ($validate->fails()) {
@@ -157,6 +158,7 @@ class EventsController extends Controller
             'age' => $request->age,
             'height' => $request->height,
             'level' => $request->level,
+            'previous_dancer' => $request->previous_dancer,
         ]);
 
         return Jetstream::inertia()->render($request, 'Events/Show', [
