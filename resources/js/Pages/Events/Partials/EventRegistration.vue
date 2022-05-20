@@ -14,6 +14,7 @@ const props = defineProps({
     ageImportant: Boolean,
     heightImportant: Boolean,
     levelImportant: Boolean,
+    previousDancers: Boolean,
 });
 
 function registerEvent() {
@@ -25,6 +26,7 @@ function registerEvent() {
             'age': props.ageImportant,
             'height': props.heightImportant,
             'level': props.levelImportant,
+            'previous_dancer': props.previousDancers,
         },
         replace: true,
         preserveState: false,
@@ -39,6 +41,7 @@ onBeforeMount(() =>{
     if (props.user.height === null
         || props.user.birthday === null
         || props.user.dancing_level === null
+        || props.user.previous_dancer === null
     ) {
         console.log('_--------------------___');
         console.log(vars.accessible);
@@ -49,6 +52,7 @@ onBeforeMount(() =>{
     console.log(props.user.birthday);
     console.log(props.user.height);
     console.log(props.user.dancing_level);
+    console.log(props.user.previous_dancer);
 })
 </script>
 
@@ -74,6 +78,12 @@ onBeforeMount(() =>{
                 <div class="col-start-2 col-end-3">
                     <Switch v-model:checked="levelImportant"/>
                 </div>
+
+                <span class="col-start-1 col-end-2 font-semibold">Frühere Tanzpartner bevorzugen:</span>
+                <div class="col-start-2 col-end-3">
+                    <Switch v-model:checked="previousDancers"/>
+                </div>
+
                 <div class="col-start-3 col-end-4 justify-self-end">
                     <JetButton v-if="vars.accessible" @click="registerEvent">
                         <span>Speichern</span>

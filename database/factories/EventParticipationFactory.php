@@ -26,6 +26,7 @@ class EventParticipationFactory extends Factory
             'age' => rand(0,1),
             'height' => rand(0,1),
             'level' => rand(0,1),
+            'previous_dancer' => rand(0,1),
         ];
     }
 }
