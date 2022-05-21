@@ -2,8 +2,9 @@
 import EventSelection from '@/Pages/Events/Partials/EventSelection.vue'
 import Switch from '@/Pages/Events/Partials/Switch.vue'
 import JetButton from '@/Jetstream/Button.vue'
+import {onBeforeMount, reactive} from 'vue'
 import { Inertia } from '@inertiajs/inertia'
-import {onBeforeMount, onMounted} from "vue";
+import Draggable from "vuedraggable"
 
 const props = defineProps({
     user: Object,
@@ -54,6 +55,33 @@ onBeforeMount(() =>{
     console.log(props.user.dancing_level);
     console.log(props.user.previous_dancer);
 })
+
+let users = reactive([
+                {
+                    "name": "John",
+                    "id": 1
+                },
+                {
+                    "name": "Joao",
+                    "id": 2
+                },
+                {
+                    "name": "Jean",
+                    "id": 3
+                },
+                {
+                    "name": "Gerard",
+                    "id": 4
+                }
+            ]);
+const onEdit = (user) => {
+            alert(`Editing ${user.name}`);
+            }
+const onDelete = (user) => {
+            alert(`Deleting ${user.name}`);
+        }
+
+
 </script>
 
 <template>
@@ -64,20 +92,18 @@ onBeforeMount(() =>{
         <div class="pt-5">
             <span>Bitte geben Sie Ihre Präferenzen an.</span>
             <div class="grid grid-cols-3 gap-4 pt-2 items-center">
-                <span class="col-start-1 col-end-2 font-semibold">Alter:</span>
-                <div class="col-start-2 col-end-3">
-                    <Switch v-model:checked="ageImportant"/>
-                </div>
 
-                <span class="col-start-1 col-end-2 font-semibold">Größe:</span>
-                <div class="col-start-2 col-end-3">
-                    <Switch v-model:checked="heightImportant"/>
-                </div>
 
-                <span class="col-start-1 col-end-2 font-semibold">Tanzlevel:</span>
-                <div class="col-start-2 col-end-3">
-                    <Switch v-model:checked="levelImportant"/>
-                </div>
+
+                <Draggable v-if="users" tag="ul" class="w-full max-w-md" v-model="users" item-key="id" :animation="200">
+                    <template #item="user">
+                        <div
+                            class="p-4 mb-3 flex justify-between items-center bg-white shadow rounded-lg cursor-move"
+                            :class="{ 'not-draggable': !enabled }">
+                            {{user}}
+                        </div>
+                    </template>
+                </Draggable>
 
                 <span class="col-start-1 col-end-2 font-semibold">Frühere Tanzpartner bevorzugen:</span>
                 <div class="col-start-2 col-end-3">

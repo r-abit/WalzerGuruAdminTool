@@ -1,11 +1,13 @@
 <script setup>
+import OrganizerSelection from '@/Pages/Organizer/Partials/OrganizerSelection.vue';
+import JetActionMessage from '@/Jetstream/ActionMessage.vue';
+import JetInputError from '@/Jetstream/InputError.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import JetButton from '@/Jetstream/Button.vue';
 import JetInput from '@/Jetstream/Input.vue';
-import JetInputError from '@/Jetstream/InputError.vue';
 import JetLabel from '@/Jetstream/Label.vue';
-import JetActionMessage from '@/Jetstream/ActionMessage.vue';
-import OrganizerSelection from '@/Pages/Organizer/Partials/OrganizerSelection.vue';
+import { onMounted, onUnmounted } from 'vue';
+import {bus} from "../../../bus";
 
 const props = defineProps({
     organizers: Object,
@@ -29,27 +31,27 @@ const upsertEventInformation = () => {
     form.post(route('events.upsert'), {
         errorBag: 'upsertEventInformation',
         preserveScroll: true,
+        preserveState: false,
         onSuccess: () => clearFrom(),
     });
 };
 
 function clearFrom() {
+    form.defaults({});
     form.reset();
 }
 
-function updateFormValues() {
-    form.id = document.getElementById('id').value;
-    form.organizer_id = document.getElementById('organizer_id').value;
-    form.name = document.getElementById('name').value;
-    form.participants = document.getElementById('participants').value;
-    form.date = document.getElementById('date').value;
-    form.time = document.getElementById('time').value;
-    form.dresscode = document.getElementById('dresscode').value;
-    form.street = document.getElementById('street').value;
-    form.zip = document.getElementById('zip').value;
-    form.city = document.getElementById('city').value;
-    form.description = document.getElementById('description').value;
-}
+onMounted(() => {
+    bus.on('event.form', ({event}) => {
+        form.defaults(event);
+        form.reset();
+    })
+})
+
+onUnmounted(() => {
+    bus.off('event.form')
+})
+
 </script>
 
 <template>
@@ -61,7 +63,7 @@ function updateFormValues() {
                     <JetLabel for="id" value="Id" class="text-left"/>
                     <JetInput
                         id="id"
-                        v-model="form.id"
+                        v-model.number="form.id"
                         type="text"
                         class="mt-1 block w-full"
                     />
@@ -93,7 +95,7 @@ function updateFormValues() {
                     <JetLabel for="participants" value="Anzahl der Teilnehmer" class="text-left"/>
                     <JetInput
                         id="participants"
-                        v-model="form.participants"
+                        v-model.number="form.participants"
                         type="number"
                         class="mt-1 block w-full"
                         required
@@ -196,7 +198,7 @@ function updateFormValues() {
                     <JetActionMessage :on="form.recentlySuccessful" class="mr-3">
                         Gespeichert.
                     </JetActionMessage>
-                    <JetButton @click="updateFormValues">
+                    <JetButton>
                         <span v-if="form.processing"  class="flex items-center">
                             <svg class="animate-spin h-4 w-4 mr-3" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

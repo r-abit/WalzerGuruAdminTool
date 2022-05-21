@@ -1,5 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3'
+import { bus } from "../../../bus";
 
 const props = defineProps({
     clickable: Boolean,
@@ -18,17 +19,14 @@ const updateForm = (event) => {
     }
 
     let time = event.date.split(' ')[1].split(':');
-    document.getElementById('id').value = event.id;
-    document.getElementById('organizer_id').value = event.organizer_id;
-    document.getElementById('name').value = event.name;
-    document.getElementById('participants').value = event.participants;
-    document.getElementById('date').value = event.date.split(' ')[0];
-    document.getElementById('time').value = time[0] + ':' + time[1];
-    document.getElementById('dresscode').value = event.dresscode;
-    document.getElementById('street').value = event.street;
-    document.getElementById('zip').value = event.zip;
-    document.getElementById('city').value = event.city;
-    document.getElementById('description').value = event.description;
+
+    bus.emit('event.form', {
+        event: {
+            ...event,
+            date: event.date.split(' ')[0],
+            time: time[0] + ':' + time[1],
+        }
+    })
 }
 
 const getOrganizer = (org_id) => {
