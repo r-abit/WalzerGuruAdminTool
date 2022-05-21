@@ -1,10 +1,12 @@
 <script setup>
+import JetActionMessage from '@/Jetstream/ActionMessage.vue';
+import JetInputError from '@/Jetstream/InputError.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
+import { onMounted, onUnmounted } from 'vue';
 import JetButton from '@/Jetstream/Button.vue';
 import JetInput from '@/Jetstream/Input.vue';
-import JetInputError from '@/Jetstream/InputError.vue';
 import JetLabel from '@/Jetstream/Label.vue';
-import JetActionMessage from '@/Jetstream/ActionMessage.vue';
+import { bus } from "../../../bus";
 
 const props = defineProps({
 });
@@ -26,26 +28,34 @@ const upsertOrganizerInformation = () => {
     form.post(route('organizers.upsert'), {
         errorBag: 'upsertOrganizerInformation',
         preserveScroll: true,
+        preserveState: false,
         onSuccess: () => clearFrom(),
     });
 };
 
 function clearFrom() {
+    form.defaults({});
     form.reset();
 }
 
 function updateFormValues() {
-    form.id = document.getElementById('id').value;
-    form.name = document.getElementById('name').value;
-    form.email = document.getElementById('email').value;
-    form.website = document.getElementById('website').value;
-    form.uid_number = document.getElementById('uid_number').value;
-    form.street = document.getElementById('street').value;
-    form.zip = document.getElementById('zip').value;
-    form.city = document.getElementById('city').value;
-    form.phone = document.getElementById('phone').value;
-    form.description = document.getElementById('description').value;
+    bus.emit('organizer.form', {
+        organizer: {
+            ...organizer,
+        }
+    })
 }
+
+onMounted(() => {
+    bus.on('organizer.form',({organizer}) => {
+        form.defaults(organizer);
+        form.reset();
+    })
+})
+
+onUnmounted(() => {
+    bus.off('organizer.form')
+})
 </script>
 
 <template>
