@@ -7,17 +7,6 @@ const props = defineProps({
 });
 
 const updateForm = (organizer) => {
-    // document.getElementById('id').value = organizer.id;
-    // document.getElementById('name').value = organizer.name;
-    // document.getElementById('email').value = organizer.email;
-    // document.getElementById('website').value = organizer.website;
-    // document.getElementById('uid_number').value = organizer.uid_number;
-    // document.getElementById('street').value = organizer.street;
-    // document.getElementById('zip').value = organizer.zip;
-    // document.getElementById('city').value = organizer.city;
-    // document.getElementById('phone').value = organizer.phone;
-    // document.getElementById('description').value = organizer.description;
-
     bus.emit('organizer.form', {
         organizer: {
             ...organizer,
