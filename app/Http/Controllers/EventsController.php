@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\EventParticipation;
 use Laravel\Jetstream\Jetstream;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Organizer;
 use App\Models\Event;
@@ -172,6 +173,8 @@ class EventsController extends Controller
             'user_id' => Auth::id(),
             'priorities' => json_encode($priorities),
             'previous_dancer' => $request->previous_dancer,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         return Jetstream::inertia()->render($request, 'Events/Show', [
