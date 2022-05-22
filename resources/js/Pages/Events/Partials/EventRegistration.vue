@@ -2,9 +2,9 @@
 import EventSelection from '@/Pages/Events/Partials/EventSelection.vue'
 import Switch from '@/Pages/Events/Partials/Switch.vue'
 import JetButton from '@/Jetstream/Button.vue'
-import {onBeforeMount, reactive} from 'vue'
+import {onBeforeMount, ref} from 'vue'
 import { Inertia } from '@inertiajs/inertia'
-import Draggable from "vuedraggable"
+import Draggable from 'vuedraggable'
 
 const props = defineProps({
     user: Object,
@@ -20,13 +20,12 @@ const props = defineProps({
 
 function registerEvent() {
     let event_id = document.querySelector('#eventList').options[document.querySelector('#eventList').selectedIndex].value;
+
     Inertia.visit('/event/participate', {
         method: 'post',
         data: {
-            'event_id': parseInt(event_id),
-            'age': props.ageImportant,
-            'height': props.heightImportant,
-            'level': props.levelImportant,
+            'event_id': ~~event_id,
+            'priorities': users,
             'previous_dancer': props.previousDancers,
         },
         replace: true,
@@ -39,41 +38,17 @@ var vars = {
 }
 
 onBeforeMount(() =>{
-    if (props.user.height === null
-        || props.user.birthday === null
-        || props.user.dancing_level === null
-        || props.user.previous_dancer === null
-    ) {
-        console.log('_--------------------___');
-        console.log(vars.accessible);
+    if (!props.user.height || !props.user.birthday || !props.user.dancing_level) {
         vars.accessible = false;
-        console.log(vars.accessible);
-        console.log('_--------------------___');
     }
-    console.log(props.user.birthday);
-    console.log(props.user.height);
-    console.log(props.user.dancing_level);
-    console.log(props.user.previous_dancer);
 })
 
-let users = reactive([
-                {
-                    "name": "John",
-                    "id": 1
-                },
-                {
-                    "name": "Joao",
-                    "id": 2
-                },
-                {
-                    "name": "Jean",
-                    "id": 3
-                },
-                {
-                    "name": "Gerard",
-                    "id": 4
-                }
+const users = ref([
+                { "name": "Alter" },
+                { "name": "Gewicht" },
+                { "name": "Tanzlevel" },
             ]);
+
 const onEdit = (user) => {
             alert(`Editing ${user.name}`);
             }
@@ -90,17 +65,17 @@ const onDelete = (user) => {
         <span v-if="$page.props.error !== ''" class="font-semibold">{{ $page.props.error }}</span>
         <span v-if="$page.props.success !== ''" class="font-semibold">{{ $page.props.success }}</span>
         <div class="pt-5">
-            <span>Bitte geben Sie Ihre Präferenzen an.</span>
+            <span>Bitte sortieren Sie die Präferenzen (absteigend) </span>
             <div class="grid grid-cols-3 gap-4 pt-2 items-center">
 
-
-
-                <Draggable v-if="users" tag="ul" class="w-full max-w-md" v-model="users" item-key="id" :animation="200">
+                <Draggable v-if="users" tag="ul" class="ml-4 px-2 w-52" v-model="users" item-key="id" :animation="200">
                     <template #item="user">
                         <div
-                            class="p-4 mb-3 flex justify-between items-center bg-white shadow rounded-lg cursor-move"
-                            :class="{ 'not-draggable': !enabled }">
-                            {{user}}
+                            class="p-4 my-2 flex justify-between text-center bg-white shadow rounded-lg cursor-move"
+                            :key="user.element.id">
+                            <span class="w-full">
+                            {{user.element.name}}
+                            </span>
                         </div>
                     </template>
                 </Draggable>
