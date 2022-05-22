@@ -20,12 +20,12 @@ class EventParticipationFactory extends Factory
      */
     public function definition()
     {
+        $properties = ["level", "height", "age"];
+        shuffle($properties);
         return [
             'event_id' => rand(1, Event::count()),
             'user_id' => rand(1, User::count()),
-            'age' => rand(0,1),
-            'height' => rand(0,1),
-            'level' => rand(0,1),
+            'priorities' => json_encode($properties),
             'previous_dancer' => rand(0,1),
         ];
     }
