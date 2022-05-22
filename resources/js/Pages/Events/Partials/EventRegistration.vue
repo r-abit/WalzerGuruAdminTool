@@ -2,8 +2,8 @@
 import EventSelection from '@/Pages/Events/Partials/EventSelection.vue'
 import Switch from '@/Pages/Events/Partials/Switch.vue'
 import JetButton from '@/Jetstream/Button.vue'
-import {onBeforeMount, ref} from 'vue'
 import { Inertia } from '@inertiajs/inertia'
+import {onBeforeMount, ref} from 'vue'
 import Draggable from 'vuedraggable'
 
 const props = defineProps({
@@ -25,7 +25,7 @@ function registerEvent() {
         method: 'post',
         data: {
             'event_id': ~~event_id,
-            'priorities': users,
+            'priorities': users.value,
             'previous_dancer': props.previousDancers,
         },
         replace: true,
@@ -44,9 +44,9 @@ onBeforeMount(() =>{
 })
 
 const users = ref([
-                { "name": "Alter" },
-                { "name": "Gewicht" },
-                { "name": "Tanzlevel" },
+                {"Alter": 'age'},
+                {"Größe": 'height'},
+                {"Tanzlevel": 'level'},
             ]);
 
 const onEdit = (user) => {
@@ -74,7 +74,7 @@ const onDelete = (user) => {
                             class="p-4 my-2 flex justify-between text-center bg-white shadow rounded-lg cursor-move"
                             :key="user.element.id">
                             <span class="w-full">
-                            {{user.element.name}}
+                            {{Object.keys(user.element)[0]}}
                             </span>
                         </div>
                     </template>
