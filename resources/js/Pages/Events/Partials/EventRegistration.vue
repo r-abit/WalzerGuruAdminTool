@@ -65,10 +65,10 @@ const onDelete = (user) => {
         <span v-if="$page.props.error !== ''" class="font-semibold">{{ $page.props.error }}</span>
         <span v-if="$page.props.success !== ''" class="font-semibold">{{ $page.props.success }}</span>
         <div class="pt-5">
-            <span>Bitte sortieren Sie die Präferenzen (absteigend) </span>
+            <span class="font-semibold">Bitte sortieren Sie die Präferenzen (absteigend):</span>
             <div class="grid grid-cols-3 gap-4 pt-2 items-center">
 
-                <Draggable v-if="users" tag="ul" class="ml-4 px-2 w-52" v-model="users" item-key="id" :animation="200">
+                <Draggable v-if="users" tag="ul" class="min-w-min ml-4 px-2 w-52 bg-gray-100 rounded-lg" v-model="users" item-key="id" :animation="200">
                     <template #item="user">
                         <div
                             class="p-4 my-2 flex justify-between text-center bg-white shadow rounded-lg cursor-move"
