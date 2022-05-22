@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\EventParticipation;
-use Inertia\Response;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Http\Request;
 use App\Models\Organizer;
 use App\Models\Event;
+use Inertia\Response;
 use App\Models\User;
 
 class EventsController extends Controller
@@ -110,9 +110,6 @@ class EventsController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'event_id' => ['exists:App\Models\Event,id'],
-            'age' => ['required', 'boolean'],
-            'height' => ['required', 'boolean'],
-            'level' => ['required', 'boolean'],
             'previous_dancer' => ['required', 'boolean'],
         ]);
 
@@ -144,6 +141,24 @@ class EventsController extends Controller
             $possible_message = 'You can try to foul the front-end but never the backend ;)';
         }
 
+        $priorities = array();
+        foreach ($request->priorities as $priority) {
+            switch (array_values($priority)[0]){
+                case 'age':
+                    $priorities[] = 'age';
+                    break;
+                case 'level':
+                    $priorities[] = 'level';
+                    break;
+                case 'height':
+                    $priorities[] = 'height';
+                    break;
+                default:
+                    $possible_message = 'No available spot for male';
+                    break;
+            }
+        }
+
         if($possible_message) {
             return Jetstream::inertia()->render($request, 'Events/Show', [
                 'error' => $possible_message,
@@ -155,9 +170,7 @@ class EventsController extends Controller
         EventParticipation::insert([
             'event_id' => $request->event_id,
             'user_id' => Auth::id(),
-            'age' => $request->age,
-            'height' => $request->height,
-            'level' => $request->level,
+            'priorities' => json_encode($priorities),
             'previous_dancer' => $request->previous_dancer,
         ]);
 
