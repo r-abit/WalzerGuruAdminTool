@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use DateTime;
 
 class MatchDancers implements ShouldQueue
 {
@@ -19,15 +20,15 @@ class MatchDancers implements ShouldQueue
     private $height_range;
 
     private function sortingAge($user, $list): array {
-        $user_age = explode("-", $user->user['birthday']);
-        $user_age = (integer)date('Y') - (integer)$user_age[0];
+        $now = new DateTime();
+        $user_age = $now->diff(new DateTime($user->user['birthday']))->y;
 
         $sorted = array();
         $i = 0;
         while (sizeof($list)) {
             foreach ($list as $key => $dancer) {
-                $dancer_age = explode("-", $dancer['birthday']);
-                $dancer_age = (integer)date('Y') - (integer)$dancer_age[0];
+                $date = new DateTime($dancer['birthday']);
+                $dancer_age = $now->diff($date)->y;
 
                 if ($dancer_age + $i == $user_age || $dancer_age - $i == $user_age){
                     $sorted[] = $dancer;
@@ -39,28 +40,48 @@ class MatchDancers implements ShouldQueue
         return $sorted;
     }
 
-     private function sortingHeight($user, $list): array {
-        DD("CURRENTLY WORKING ON IT");
-        dd($user->user);
-        $user_age = explode("-", $user->user['birthday']);
-        $user_age = (integer)date('Y') - (integer)$user_age[0];
-
+    private function sorting_height_or_level($user, $list, $sort): array {
         $sorted = array();
         $i = 0;
         while (sizeof($list)) {
             foreach ($list as $key => $dancer) {
-                $dancer_age = explode("-", $dancer['birthday']);
-                $dancer_age = (integer)date('Y') - (integer)$dancer_age[0];
-
-                if ($dancer_age + $i == $user_age || $dancer_age - $i == $user_age){
-                    $sorted[] = $dancer;
-                    unset($list[$key]);
+                if ($sort = 'height'){
+                    if ($dancer['height'] + $i == $user->user->height || $dancer['height'] - $i == $user->user->height){
+                        $sorted[] = $dancer;
+                        unset($list[$key]);
+                    }
+                }
+                elseif ($sort = 'level'){
+                    if ($dancer['dancing_level'] + $i == $user->user->dancing_level || $dancer['dancing_level'] - $i == $user->user->dancing_level) {
+                        $sorted[] = $dancer;
+                        unset($list[$key]);
+                    }
                 }
             }
             $i++;
         }
         return $sorted;
-     }
+    }
+
+    private function get_age_by_range($user_birthday, &$list, $range): array {
+        $now = new DateTime();
+        $user_birthday = $now->diff(new DateTime($user_birthday))->y;
+
+        $filtered_list = array();
+        foreach ($list as $pos => $person){
+            $persons_age = $now->diff(new DateTime($person->user->birthday))->y;
+            if ($persons_age >= $user_birthday - $range && $persons_age <= $user_birthday + $range) {
+                $filtered_list[] = $person;
+                unset($list[$pos]);
+            }
+        }
+        return $filtered_list;
+    }
+
+    private function get_height_by_range($user_birthday, &$list, $range): array {
+        var_dump("Currently working on it");
+        return array();
+    }
 
     /**
      * Create a new job instance.
@@ -81,9 +102,15 @@ class MatchDancers implements ShouldQueue
      */
     public function handle()
     {
+        /** Created list to separate males and females */
         $males = array();
-        $male_priority = array();
         $females = array();
+
+        /**
+         * This will be the priority table ex. $male_priority = [ [m1 = [f1, f2, ...]], [...], ...]
+         * This is needed to perform the Gale-Shapley algorithm
+         */
+        $male_priority = array();
         $female_priority = array();
         $all_participants = EventParticipation::where('event_id', $this->event_id)->get();
 
@@ -98,6 +125,13 @@ class MatchDancers implements ShouldQueue
                 $females[] = $user;
         }
         $all_participants = null;
+//        foreach ($males as $male) {
+//            if ($male->previous_dancer)
+//                var_dump("Y: " . $male->id);
+//            else
+//                var_dump("N: " . $male->id);
+//        }
+//        dd(sizeof($males));
 
         foreach($males as $male) {
             $copy_females = $females;
@@ -119,54 +153,70 @@ class MatchDancers implements ShouldQueue
             }
 
             foreach(json_decode($male->priorities) as $priority) {
+                if (!array_key_exists($male->user->id, $male_priority)) {
+                    $male_priority[$male->user->id] = array();
+                    break;
+                }
+
                 switch($priority) {
                     case 'age':
-//                        $male_priority[$male->user->id] = $this->sortingAge($male, $male_priority[$male->user->id]);
+                        $male_priority[$male->user->id] = $this->sortingAge($male, $male_priority[$male->user->id]);
+                        break 2;
+                    case 'height':
+                        $male_priority[$male->user->id] = $this->sorting_height_or_level($male, $male_priority[$male->user->id], 'height');
+                        break 2;
+                    case 'level':
+                        $male_priority[$male->user->id] = $this->sorting_height_or_level($male, $male_priority[$male->user->id], 'level');
+                        break 2;
+                }
+            }
+
+            /**
+             * This will add sorted (best to worst) persons that match the range and
+             * with there already defined preference of the dancer to dance with.
+             */
+//            $copy_females;
+            foreach(json_decode($male->priorities) as $priority) {
+
+                switch($priority) {
+                    case 'age':
+                        var_dump("FIRST");
+                        var_dump('before:' . sizeof($copy_females));
+                        var_dump('before:' . sizeof($male_priority[$male->user->id]));
+                        $get_age_list = $this->get_age_by_range($male->user->birthday, $copy_females, $this->age_range);
+                        $male_priority[$male->user->id] += $get_age_list;
+                        $get_age_list = null;
+                        var_dump('after:' . sizeof($copy_females));
+                        var_dump('after:' . sizeof($male_priority[$male->user->id]));
+                        if (sizeof($male_priority[$male->user->id]) == 3) {
+                            var_dump('User: ' . $male->user->birthday);
+                            foreach ($male_priority[$male->user->id] as $girl)
+                                var_dump($girl->user->birthday);
+                        }
+//                        dd($get_age_list);
+                        // TODO: sort by age and add to $male_priority[$male->user->id]
                         break;
                     case 'height':
-                        $male_priority[$male->user->id] = $this->sortingHeight($male, $male_priority[$male->user->id]);
+                        die();
+//                        dd("Oh hahaha");
+//                        $male_priority[$male->user->id] = $this->sorting_height_or_level($male, $male_priority[$male->user->id], 'height');
                         break;
                     case 'level':
+                        var_dump("Oh!?");
+//                        $male_priority[$male->user->id] = $this->sorting_height_or_level($male, $male_priority[$male->user->id], 'level');
                         break;
                 }
             }
-            dd($male_priority[$male->user->id]);
 
             /**
              * This will add randomly persons that matches the range and
              * already defined preference to choose the dancer to dance
              */
-
-            die();
-
-            var_dump('+++++++++++++++++++++++++++++++++++++++++++++++++');
-            $birthDate = explode("-", $male->user['birthday']);
-            $age = (integer)date('Y') - (integer)$birthDate[0];
-            var_dump('id: ' . $male->id);
-            var_dump('uid: ' . $male->user->toArray()['id']);
-            var_dump('age: ' . $age);
-            var_dump('height: ' . $male->user->toArray()['height']);
-            var_dump('dancing_level: ' . $male->user->toArray()['dancing_level']);
-            var_dump('prio: ' . ($male->priorities));
-            var_dump('+++++++++++++++++++++++++++++++++++++++++++++++++');
-            foreach ($copy_females as $female){
-                $girly = $female->user->toArray();
-                $birthDate = explode("-", $girly['birthday']);
-                $age = (integer)date('Y') - (integer)$birthDate[0];
-
-                var_dump('-----------------------------------------');
-                var_dump('id: ' . $girly['id']);
-                var_dump('age: ' . $age);
-                var_dump('height: ' . $girly['height']);
-                var_dump('dancing_level: ' . $girly['dancing_level']);
-            };
-            die();
-
-            /**
-             * This will add randomly persons that matches the range and
-             * already defined preference to choose the dancer to dance
-             */
+            var_dump('end: ' . sizeof($copy_females));
         }
+
+        dd("=====");
+        dd($male_priority);
 
         foreach($females as $female) {
             $female_priority[] = $female->user->id;
