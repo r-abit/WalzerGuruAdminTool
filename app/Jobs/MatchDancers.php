@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use DateTime;
+use Illuminate\Support\Facades\Log;
 
 class MatchDancers implements ShouldQueue
 {
@@ -46,13 +47,13 @@ class MatchDancers implements ShouldQueue
         $i = 0;
         while (sizeof($list)) {
             foreach ($list as $key => $dancer) {
-                if ($sort = 'height'){
+                if ($sort == 'height'){
                     if ($dancer['height'] + $i == $user->user->height || $dancer['height'] - $i == $user->user->height){
                         $sorted[] = $dancer;
                         unset($list[$key]);
                     }
                 }
-                elseif ($sort = 'level'){
+                elseif ($sort == 'level'){
                     if ($dancer['dancing_level'] + $i == $user->user->dancing_level || $dancer['dancing_level'] - $i == $user->user->dancing_level) {
                         $sorted[] = $dancer;
                         unset($list[$key]);
@@ -143,13 +144,6 @@ class MatchDancers implements ShouldQueue
                 $females[] = $user;
         }
         $all_participants = null;
-//        foreach ($males as $male) {
-//            if ($male->previous_dancer)
-//                var_dump("Y: " . $male->id);
-//            else
-//                var_dump("N: " . $male->id);
-//        }
-//        dd(sizeof($males));
 
         foreach($males as $male) {
             $copy_females = $females;
@@ -168,6 +162,7 @@ class MatchDancers implements ShouldQueue
                         }
                     }
                 }
+//                if (sizeof($male_priority) >=3 ) dd($male->user->id);
             }
 
             foreach(json_decode($male->priorities) as $priority) {
@@ -204,31 +199,36 @@ class MatchDancers implements ShouldQueue
                         $list = null;
                         break;
                     case 'height':
-                        var_dump("----------   FIRST   ----------");
-                        var_dump('before:' . sizeof($copy_females));
-                        var_dump('before:' . sizeof($male_priority[$male->user->id]));
                         $list = $this->filter_by_range($male->user->height, $copy_females, 'height');
                         $list = $this->sorting_height_or_level($male, $list, 'height');
                         foreach ($list as $female) $male_priority[$male->user->id][] = $female;
-                        var_dump('after:' . sizeof($copy_females));
-                        var_dump('after:' . sizeof($male_priority[$male->user->id]));
-                        var_dump("----------    END    ----------");
                         break;
                     case 'level':
-                        var_dump("Oh!?");
-//                        $male_priority[$male->user->id] = $this->sorting_height_or_level($male, $male_priority[$male->user->id], 'level');
+//                        var_dump("----------   FIRST   ----------");
+//                        var_dump('before:' . sizeof($copy_females));
+//                        var_dump('before:' . sizeof($male_priority[$male->user->id]));
+                        $list = $this->filter_by_range($male->user->dancing_level, $copy_females, 'level');
+                        $list = $this->sorting_height_or_level($male, $list, 'level');
+                        foreach ($list as $female) $male_priority[$male->user->id][] = $female;
+//                        var_dump('after:' . sizeof($copy_females));
+//                        var_dump('after:' . sizeof($male_priority[$male->user->id]));
+//                        var_dump("----------    END    ----------");
                         break;
                 }
             }
 
-            /**
-             * This will add randomly persons that matches the range and
-             * already defined preference to choose the dancer to dance
-             */
-            var_dump('end: ' . sizeof($copy_females));
-        }
 
-        dd("=====");
+            /**
+             * These are the rest of the persons that could not be matched.
+             * This list will be shuffled and added at the end
+             */
+            shuffle($copy_females);
+            foreach ($copy_females as $pos => $female){
+                $male_priority[$male->user->id][] = $female->user->toArray();
+                unset($copy_females[$pos]);
+            }
+        }
+        Log::info($male_priority);die();
         dd($male_priority);
 
         foreach($females as $female) {
