@@ -18,6 +18,7 @@ class MatchDancers implements ShouldQueue
     private $event_id;
     private $age_range;
     private $height_range;
+    private $level_range;
 
     private function sortingAge($user, $list): array {
         $now = new DateTime();
@@ -63,24 +64,40 @@ class MatchDancers implements ShouldQueue
         return $sorted;
     }
 
-    private function get_age_by_range($user_birthday, &$list, $range): array {
+    private function get_age_by_range($user_birthday, &$list): array {
         $now = new DateTime();
         $user_birthday = $now->diff(new DateTime($user_birthday))->y;
 
         $filtered_list = array();
         foreach ($list as $pos => $person){
             $persons_age = $now->diff(new DateTime($person->user->birthday))->y;
-            if ($persons_age >= $user_birthday - $range && $persons_age <= $user_birthday + $range) {
-                $filtered_list[] = $person;
+            if ($persons_age >= $user_birthday - $this->age_range && $persons_age <= $user_birthday + $this->age_range) {
+                $filtered_list[] = $person->user->toArray();
                 unset($list[$pos]);
             }
         }
+
         return $filtered_list;
     }
 
-    private function get_height_by_range($user_birthday, &$list, $range): array {
-        var_dump("Currently working on it");
-        return array();
+    private function filter_by_range($user, &$list, $type): array {
+        $filtered_list = array();
+        foreach ($list as $pos => $person){
+            if ($type == 'height') {
+                if ($person->user->height >= $user - $this->height_range && $person->user->height <= $user + $this->height_range) {
+                    $filtered_list[] = $person->user->toArray();
+                    unset($list[$pos]);
+                }
+            } elseif ($type == 'level') {
+               if ($person->user->dancing_level >= $user - $this->level_range && $person->user->dancing_level <=
+                   $user + $this->level_range) {
+                    $filtered_list[] = $person->user->toArray();
+                    unset($list[$pos]);
+                }
+            }
+        }
+
+        return $filtered_list;
     }
 
     /**
@@ -88,11 +105,12 @@ class MatchDancers implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($event_id, $age_range = 3, $height_range = 5)
+    public function __construct($event_id, $age_range = 3, $height_range = 5, $level_range = 1)
     {
         $this->event_id = $event_id;
         $this->age_range = $age_range;
         $this->height_range = $height_range;
+        $this->level_range = $level_range;
     }
 
     /**
@@ -180,26 +198,21 @@ class MatchDancers implements ShouldQueue
 
                 switch($priority) {
                     case 'age':
-                        var_dump("FIRST");
-                        var_dump('before:' . sizeof($copy_females));
-                        var_dump('before:' . sizeof($male_priority[$male->user->id]));
-                        $get_age_list = $this->get_age_by_range($male->user->birthday, $copy_females, $this->age_range);
-                        $male_priority[$male->user->id] += $get_age_list;
-                        $get_age_list = null;
-                        var_dump('after:' . sizeof($copy_females));
-                        var_dump('after:' . sizeof($male_priority[$male->user->id]));
-                        if (sizeof($male_priority[$male->user->id]) == 3) {
-                            var_dump('User: ' . $male->user->birthday);
-                            foreach ($male_priority[$male->user->id] as $girl)
-                                var_dump($girl->user->birthday);
-                        }
-//                        dd($get_age_list);
-                        // TODO: sort by age and add to $male_priority[$male->user->id]
+                        $list = $this->get_age_by_range($male->user->birthday, $copy_females);
+                        $list = $this->sortingAge($male, $list);
+                        foreach ($list as $female) $male_priority[$male->user->id][] = $female;
+                        $list = null;
                         break;
                     case 'height':
-                        die();
-//                        dd("Oh hahaha");
-//                        $male_priority[$male->user->id] = $this->sorting_height_or_level($male, $male_priority[$male->user->id], 'height');
+                        var_dump("----------   FIRST   ----------");
+                        var_dump('before:' . sizeof($copy_females));
+                        var_dump('before:' . sizeof($male_priority[$male->user->id]));
+                        $list = $this->filter_by_range($male->user->height, $copy_females, 'height');
+                        $list = $this->sorting_height_or_level($male, $list, 'height');
+                        foreach ($list as $female) $male_priority[$male->user->id][] = $female;
+                        var_dump('after:' . sizeof($copy_females));
+                        var_dump('after:' . sizeof($male_priority[$male->user->id]));
+                        var_dump("----------    END    ----------");
                         break;
                     case 'level':
                         var_dump("Oh!?");
