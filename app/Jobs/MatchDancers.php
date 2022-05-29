@@ -122,8 +122,7 @@ class MatchDancers implements ShouldQueue
     public function handle()
     {
         /** Created list to separate males and females */
-        $males = array();
-        $females = array();
+        $all_persons = array();
 
         /**
          * This will be the priority table ex. $male_priority = [ [m1 = [f1, f2, ...]], [...], ...]
@@ -139,110 +138,149 @@ class MatchDancers implements ShouldQueue
          */
         foreach($all_participants as $user) {
             if ($user->user->gender == 'male')
-                $males[] = $user;
+                $all_persons['male'][] = $user;
             else
-                $females[] = $user;
+                $all_persons['female'][] = $user;
         }
         $all_participants = null;
 
-        foreach($males as $male) {
-            $copy_females = $females;
+        foreach($all_persons as $key => $group) {
+            if ($key == 'male')
+                $person_group = $all_persons['male'];
+            else
+                $person_group = $all_persons['female'];
 
-            /**
-             * If previous dancer is preferred this will get them //and shuffle them//
-             * and will be chosen randomly to be added to priority list.
-             */
-            if (!!$male->previous_dancer) {
-                $liked_users = LikedUsers::where('user', $male->user->id)->get()->toArray();
-                foreach ($liked_users as $liked_user) {
-                    foreach ($copy_females as $idx => $female) {
-                        if ($liked_user['likes'] == $female->user_id) {
-                            $male_priority[$male->user->id][] = $female->user;
-                            unset($copy_females[$idx]);
+            foreach($person_group as $person) {
+                if ($key == 'male')
+                    $copy = $all_persons['female'];
+                elseif ($key == 'female')
+                    $copy = $all_persons['male'];
+
+                /**
+                 * If previous dancer is preferred this will get them //and shuffle them//
+                 * and will be chosen randomly to be added to priority list.
+                 */
+                if (!!$person['previous_dancer']) {
+                    $liked_users = LikedUsers::where('user', $person->user->id)->get()->toArray();
+                    foreach ($liked_users as $liked_user) {
+                        foreach ($copy as $idx => $likes) {
+                            if ($liked_user['likes'] == $likes->user_id) {
+                                if ($key == 'male')
+                                    $male_priority[$person->user->id][] = $likes->user;
+                                elseif ($key == 'female')
+                                    $female_priority[$person->user->id][] = $likes->user;
+                                unset($copy[$idx]);
+                            }
                         }
                     }
                 }
-            }
 
-            foreach(json_decode($male->priorities) as $priority) {
-                if (!array_key_exists($male->user->id, $male_priority)) {
-                    $male_priority[$male->user->id] = array();
-                    break;
+                foreach(json_decode($person->priorities) as $priority) {
+                    if ($key == 'male' && !array_key_exists($person->user->id, $male_priority)) {
+                        $male_priority[$person->user->id] = array();
+                        break;
+                    }
+                    elseif ($key == 'female' && !array_key_exists($person->user->id, $female_priority)) {
+                        $female_priority[$person->user->id] = array();
+                        break;
+                    }
+
+                    switch($priority) {
+                        case 'age':
+                            if ($key == 'male') {
+                                $temp_list = $this->sortingAge($person, $male_priority[$person->user->id]);
+                                foreach ($temp_list as $temp_user)
+                                    $male_priority[$person->user->id][] = $temp_user['id'];
+                            } elseif ($key == 'female'){
+                                $temp_list = $this->sortingAge($person, $female_priority[$person->user->id]);
+                                foreach ($temp_list as $temp_user)
+                                    $female_priority[$person->user->id][] = $temp_user['id'];
+                            }
+                            break 2;
+                        case 'height':
+                            if ($key == 'male') {
+                                $temp_list = $this->sorting_height_or_level($person, $male_priority[$person->user->id], 'height');
+                                foreach ($temp_list as $temp_user)
+                                    $male_priority[$person->user->id][] = $temp_user['id'];
+                            } elseif ($key == 'female') {
+                                $temp_list = $this->sorting_height_or_level($person, $female_priority[$person->user->id], 'height');
+                                foreach ($temp_list as $temp_user)
+                                    $female_priority[$person->user->id][] = $temp_user['id'];
+                            }
+                            break 2;
+                        case 'level':
+                            if ($key == 'male') {
+                                $temp_list = $this->sorting_height_or_level($person, $male_priority[$person->user->id], 'level');
+                                foreach ($temp_list as $temp_user)
+                                    $male_priority[$person->user->id][] = $temp_user['id'];
+                            } elseif ($key == 'female') {
+                                $temp_list = $this->sorting_height_or_level($person, $female_priority[$person->user->id], 'level');
+                                foreach ($temp_list as $temp_user)
+                                    $female_priority[$person->user->id][] = $temp_user['id'];
+                            }
+                            break 2;
+                    }
                 }
 
-                switch($priority) {
-                    case 'age':
-                        $temp_list = $this->sortingAge($male, $male_priority[$male->user->id]);
-                        foreach ($temp_list as $person)
-                            $male_priority[$male->user->id][] = $person->id;
-                        break 2;
-                    case 'height':
-                        $temp_list = $this->sorting_height_or_level($male, $male_priority[$male->user->id], 'height');
-                        foreach ($temp_list as $person)
-                            $male_priority[$male->user->id][] = $person->id;
-                        break 2;
-                    case 'level':
-                        $temp_list = $this->sorting_height_or_level($male, $male_priority[$male->user->id], 'level');
-                        foreach ($temp_list as $person)
-                            $male_priority[$male->user->id][] = $person->id;
-                        break 2;
-                }
-            }
-//            $male_priority[$male->user->id][] = "++++-1----------------------------------------";
+                /**
+                 * This will add sorted (best to worst) persons that match the range and
+                 * with there already defined preference of the dancer to dance with.
+                 */
+                foreach(json_decode($person->priorities) as $priority) {
 
-            /**
-             * This will add sorted (best to worst) persons that match the range and
-             * with there already defined preference of the dancer to dance with.
-             */
-            foreach(json_decode($male->priorities) as $priority) {
-
-                switch($priority) {
-                    case 'age':
-//                        $male_priority[$male->user->id][] = "-2----------------------------------------";
-                        $list = $this->get_age_by_range($male->user->birthday, $copy_females);
-                        $list = $this->sortingAge($male, $list);
-                        foreach ($list as $female)
-                            $male_priority[$male->user->id][] = $female['id'] . " _> " . $female['birthday'];
-                        $list = null;
-                        break;
-                    case 'height':
-//                        $male_priority[$male->user->id][] = "-3----------------------------------------";
-                        $list = $this->filter_by_range($male->user->height, $copy_females, 'height');
-                        $list = $this->sorting_height_or_level($male, $list, 'height');
-                        foreach ($list as $female)
-                            $male_priority[$male->user->id][] = $female['id'] . " _> " . $female['height'];
-                        break;
-                    case 'level':
-//                        var_dump("----------   FIRST   ----------");
-//                        var_dump('before:' . sizeof($copy_females));
-//                        var_dump('before:' . sizeof($male_priority[$male->user->id]));
-//                        $male_priority[$male->user->id][] = "-4----------------------------------------";
-                        $list = $this->filter_by_range($male->user->dancing_level, $copy_females, 'level');
-                        $list = $this->sorting_height_or_level($male, $list, 'level');
-                        foreach ($list as $female)
-                            $male_priority[$male->user->id][] = $female['id'] . " _> " . $female['dancing_level'];
-//                        var_dump('after:' . sizeof($copy_females));
-//                        var_dump('after:' . sizeof($male_priority[$male->user->id]));
-//                        var_dump("----------    END    ----------");
-                        break;
+                    switch($priority) {
+                        case 'age':
+                            $list = $this->get_age_by_range($person->user->birthday, $copy);
+                            $list = $this->sortingAge($person, $list);
+                            foreach ($list as $each) {
+                                if ($key == 'male')
+                                    $male_priority[$person->user->id][] = $each['id'] . " _> " . $each['birthday'];
+                                elseif ($key == 'female')
+                                    $female_priority[$person->user->id][] = $each['id'] . " _> " . $each['birthday'];
+                            }
+                            $list = null;
+                            break;
+                        case 'height':
+                            $list = $this->filter_by_range($person->user->height, $copy, 'height');
+                            $list = $this->sorting_height_or_level($person, $list, 'height');
+                            foreach ($list as $each) {
+                                if ($key == 'male')
+                                    $male_priority[$person->user->id][] = $each['id'] . " _> " . $each['height'];
+                                elseif ($key == 'female')
+                                    $female_priority[$person->user->id][] = $each['id'] . " _> " . $each['height'];
+                            }
+                            break;
+                        case 'level':
+                            $list = $this->filter_by_range($person->user->dancing_level, $copy, 'level');
+                            $list = $this->sorting_height_or_level($person, $list, 'level');
+                            foreach ($list as $each) {
+                                if ($key == 'male')
+                                    $male_priority[$person->user->id][] = $each['id'] . " _> " . $each['dancing_level'];
+                                elseif ($key == 'female')
+                                    $female_priority[$person->user->id][] = $each['id'] . " _> " . $each['dancing_level'];
+                            }
+                            break;
+                    }
                 }
-            }
-//$male_priority[$male->user->id][] = "-5----------------------------------------";
 
             /**
              * These are the rest of the persons that could not be matched.
              * This list will be shuffled and added at the end
              */
-            shuffle($copy_females);
-            foreach ($copy_females as $pos => $female){
-                $male_priority[$male->user->id][] = $female->user->id;
-                unset($copy_females[$pos]);
+                shuffle($copy);
+                foreach ($copy as $pos => $user){
+                    if ($key == 'male')
+                        $male_priority[$person->user->id][] = $user->user->id;
+                    elseif ($key == 'female')
+                        $female_priority[$person->user->id][] = $user->user->id;
+
+                    unset($copy[$pos]);
+                }
             }
         }
 
         Log::info($male_priority);
-        foreach($females as $female) {
-            $female_priority[] = $female->user->id;
-        }
+        Log::info("-----------------------------------------------------------------------");
+        Log::info($female_priority);
     }
 }
