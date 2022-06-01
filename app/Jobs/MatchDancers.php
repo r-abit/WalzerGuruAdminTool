@@ -234,9 +234,9 @@ class MatchDancers implements ShouldQueue
                             $list = $this->sortingAge($person, $list);
                             foreach ($list as $each) {
                                 if ($key == 'male')
-                                    $male_priority[$person->user->id][] = $each['id'] . " _> " . $each['birthday'];
+                                    $male_priority[$person->user->id][] = $each['id'];
                                 elseif ($key == 'female')
-                                    $female_priority[$person->user->id][] = $each['id'] . " _> " . $each['birthday'];
+                                    $female_priority[$person->user->id][] = $each['id'];
                             }
                             $list = null;
                             break;
@@ -245,9 +245,9 @@ class MatchDancers implements ShouldQueue
                             $list = $this->sorting_height_or_level($person, $list, 'height');
                             foreach ($list as $each) {
                                 if ($key == 'male')
-                                    $male_priority[$person->user->id][] = $each['id'] . " _> " . $each['height'];
+                                    $male_priority[$person->user->id][] = $each['id'];
                                 elseif ($key == 'female')
-                                    $female_priority[$person->user->id][] = $each['id'] . " _> " . $each['height'];
+                                    $female_priority[$person->user->id][] = $each['id'];
                             }
                             break;
                         case 'level':
@@ -255,9 +255,9 @@ class MatchDancers implements ShouldQueue
                             $list = $this->sorting_height_or_level($person, $list, 'level');
                             foreach ($list as $each) {
                                 if ($key == 'male')
-                                    $male_priority[$person->user->id][] = $each['id'] . " _> " . $each['dancing_level'];
+                                    $male_priority[$person->user->id][] = $each['id'];
                                 elseif ($key == 'female')
-                                    $female_priority[$person->user->id][] = $each['id'] . " _> " . $each['dancing_level'];
+                                    $female_priority[$person->user->id][] = $each['id'];
                             }
                             break;
                     }
@@ -267,15 +267,20 @@ class MatchDancers implements ShouldQueue
              * These are the rest of the persons that could not be matched.
              * This list will be shuffled and added at the end
              */
-                shuffle($copy);
-                foreach ($copy as $pos => $user){
-                    if ($key == 'male')
-                        $male_priority[$person->user->id][] = $user->user->id;
-                    elseif ($key == 'female')
-                        $female_priority[$person->user->id][] = $user->user->id;
-
-                    unset($copy[$pos]);
-                }
+            shuffle($copy);
+            foreach ($copy as $pos => $user){
+                if ($key == 'male')
+                    $male_priority[$person->user->id][] = $user->user->id;
+                elseif ($key == 'female')
+                    $female_priority[$person->user->id][] = $user->user->id;
+                unset($copy[$pos]);
+            }
+            if ($key == 'male')
+                $male_priority[$person->user->id] = array('found' => false) + array("list" =>
+                        $male_priority[$person->user->id]);
+            elseif ($key == 'female')
+                $female_priority[$person->user->id] = array('found' => false) + array("list" =>
+                        $female_priority[$person->user->id]);
             }
         }
 
