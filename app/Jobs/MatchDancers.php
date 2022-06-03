@@ -267,7 +267,7 @@ class MatchDancers implements ShouldQueue
              * These are the rest of the persons that could not be matched.
              * This list will be shuffled and added at the end
              */
-            shuffle($copy);
+//            shuffle($copy);
             foreach ($copy as $pos => $user){
                 if ($key == 'male')
                     $male_priority[$person->user->id][] = $user->user->id;
@@ -284,8 +284,70 @@ class MatchDancers implements ShouldQueue
             }
         }
 
-        Log::info($male_priority);
-        Log::info("-----------------------------------------------------------------------");
-        Log::info($female_priority);
+
+        /**
+         * This will decide which of the lists should be run first male or female.
+         * It is necessary to start from the smaller list for the algorithm.
+         * Otherwise, it would have never known when the algorithm is done.
+         */
+        if (sizeof($female_priority) <= sizeof($male_priority)){
+            $table_a = $female_priority;
+            $female_priority = null;
+            $table_b = $male_priority;
+            $male_priority = null;
+        } else {
+            $table_a = $male_priority;
+            $male_priority = null;
+            $table_b = $female_priority;
+            $female_priority = null;
+        }
+
+        $completed = false;
+        while (!$completed) {
+            foreach ($table_a as $a_id => $item) {
+                $completed = true;
+                if (!$item['found']) {
+                    $completed = false;
+                    $possible_partner = reset($item['list']);
+                    if (!$table_b[$possible_partner]['found']) {
+                        foreach (array_reverse($table_b[$possible_partner]['list']) as $id) {
+                            if ($a_id == $id) {
+                                $table_a[$a_id]['found'] = true;
+                                $table_b[$possible_partner]['found'] = true;
+                                break;
+                            } else
+                                array_pop($table_b[$possible_partner]['list']);
+                        }
+                    } else {
+                        if (in_array($a_id, $table_b[$possible_partner]['list'])) {
+                            $tmp = array();
+                            foreach ($table_b[$possible_partner]['list'] as $i => $id) {
+                                $tmp[] = $id;
+                                if ($a_id != $id)
+                                    unset($table_b[$possible_partner]['list'][$id]); else
+                                    break;
+                            }
+
+                            $change_found = array_pop($table_b[$possible_partner]['list']);
+                            $table_a[$a_id]['found'] = true;
+                            $table_a[$change_found]['found'] = false;
+                            array_shift($table_a[$change_found]['list']);
+                            $table_b[$possible_partner]['list'] = $tmp;
+                        }
+                    }
+                }
+            }
+        }
+
+        $result = array('match' => array(), 'no_match' => array());
+
+        foreach ($table_b as $i => $person_b){
+            if ($person_b['found'] == true)
+                $result['match'][$i] = array_pop($person_b['list']);
+            else
+                $result['no_match'][] = $i;
+        }
+
+        Log::info($result);
     }
 }
