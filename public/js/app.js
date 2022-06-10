@@ -28257,7 +28257,9 @@ var _hoisted_4 = {
 
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "font-semibold"
-}, "Bitte sortieren Sie die Präferenzen (absteigend):", -1
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Bitte sortieren Sie absteigend Ihre Präferenzen "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "font-normal"
+}, "(Liste verschiebbar)")], -1
 /* HOISTED */
 );
 
