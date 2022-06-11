@@ -91,7 +91,7 @@ const onDelete = (user) => {
                     <JetButton v-if="vars.accessible" @click="registerEvent">
                         <span>Speichern</span>
                     </JetButton>
-                    <JetButton v-else class="bg-gray-700 active:bg-gray-700 hover:bg-gray-700 hover:cursor-default" >
+                    <JetButton v-else class="bg-red-400 active:bg-red-400 hover:bg-red-400 hover:cursor-default" >
                         <span>Bitte Profile ergänzen!</span>
                     </JetButton>
                 </div>
