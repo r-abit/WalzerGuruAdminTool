@@ -140,6 +140,9 @@ class EventsController extends Controller
             || Auth::user()->dancing_level == null
         ) {
             $possible_message = 'You can try to foul the front-end but never the backend ;)';
+        } elseif (Auth::user()->gender == null
+        ) {
+            $possible_message = 'Your gender is not defined!';
         }
 
         $priorities = array();
