@@ -38,7 +38,7 @@ var vars = {
 }
 
 onBeforeMount(() =>{
-    if (!props.user.height || !props.user.birthday || !props.user.dancing_level) {
+    if (!props.user.height || !props.user.birthday || !props.user.dancing_level || !props.user.gender) {
         vars.accessible = false;
     }
 })
