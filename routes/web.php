@@ -19,7 +19,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    return redirect()->route('dashboard.show');
 //    return Inertia::render('Welcome', [
 //        'canLogin' => Route::has('login'),
 //        'canRegister' => Route::has('register'),
@@ -34,8 +34,8 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+        return Inertia::render('Dashboard/Show');
+    })->name('dashboard.show');
 
     Route::controller(OrganizerController::class)->group(function () {
         Route::get('/organizers', 'show')->name('organizers.show');
