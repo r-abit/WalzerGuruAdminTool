@@ -22,7 +22,7 @@ class EventsController extends Controller
         if ($user->role == 'organizer')
             $events = $user->organizer->events;
         else
-            $events = Event::get()->toArray();
+            $events = Event::orderBy('date')->get()->toArray();
 
         if ($user->role == 'user') {
             $temp = array();
@@ -99,7 +99,7 @@ class EventsController extends Controller
         if (Auth::user()->role == 'organizer')
             $events = Auth::user()->organizer->events;
         else
-            $events = Event::get()->toArray();
+            $events = Event::orderBy('date')->get()->toArray();
 
         return Jetstream::inertia()->render($request, 'Events/Show', [
             'events' => $events,
