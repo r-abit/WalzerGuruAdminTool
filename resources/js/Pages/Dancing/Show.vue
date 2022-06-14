@@ -1,6 +1,6 @@
 <script setup>
-import EventsList from '@/Pages/Events/Partials/EventsList.vue'
 import AppLayout from '@/Layouts/AppLayout.vue';
+import DancedUsers from '@/Pages/Dancing/Partials/DancedUsers.vue'
 
 const props = defineProps({
     previous_events: Object,
@@ -21,18 +21,11 @@ const props = defineProps({
         </template>
 
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <p class="text-sm font-semibold text-gray-600 uppercase pl-2 pb-2">Aktuelle Anmeldungen</p>
-            <EventsList :user="$page.props.user"
-                        :events="$page.props.upcoming_events"
-                        :organizers="$page.props.organizers"
-                        :deletable="true"
-                        class="mb-5" />
+            <p class="text-sm font-semibold text-gray-600 uppercase pl-2 pb-2">Gefallene Tänzer</p>
+            <DancedUsers :user="$page.props.user" />
 
-            <p class="text-sm font-semibold text-gray-600 uppercase pl-2 pb-2">Vergangene Events</p>
-            <EventsList :user="$page.props.user"
-                        :events="$page.props.previous_events"
-                        :organizers="$page.props.organizers"
-                        />
+            <p class="text-sm font-semibold text-gray-600 uppercase pl-2 pb-2 mt-5">Bereits getanzt mit</p>
+            <DancedUsers :user="$page.props.user" />
         </div>
 
     </AppLayout>
