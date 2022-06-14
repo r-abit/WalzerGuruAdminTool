@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\OrganizerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DancingController;
 use App\Http\Controllers\EventsController;
 use Illuminate\Foundation\Application;
@@ -53,6 +54,11 @@ Route::middleware([
     Route::controller(DancingController::class)->group(function () {
         Route::get('/dancing', 'show')->name('dancing.show');
         Route::delete('/dancing', 'delete')->name('dancing.delete');
+    });
+
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('/dashboard', 'show')->name('dashboard.show');
+        Route::delete('/dashboard', 'delete')->name('dashboard.delete');
     });
 });
 

@@ -88,7 +88,7 @@ const getOrganizer = (org_id) => {
                     {{ event.date }}
                 </td>
                 <td v-if="props.deletable" class="px-3 py-3 flex justify-center items-center cursor-default">
-                    <Link :href='(props.user.role === "user") ? "/dancing" :  "/events"'
+                    <Link :href='(props.user.role === "user") ? "/dashboard" :  "/events"'
                           method="delete"
                           as="button"
                           preserve-scroll
