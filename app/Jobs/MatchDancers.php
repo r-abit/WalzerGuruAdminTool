@@ -152,8 +152,7 @@ class MatchDancers implements ShouldQueue
 
             foreach($person_group as $person) {
                 if ($key == 'male')
-                    $copy = $all_persons['female'];
-                elseif ($key == 'female')
+                    $copy = $all_persons['female']; elseif ($key == 'female')
                     $copy = $all_persons['male'];
 
                 /**
@@ -166,8 +165,7 @@ class MatchDancers implements ShouldQueue
                         foreach ($copy as $idx => $likes) {
                             if ($liked_user['likes'] == $likes->user_id) {
                                 if ($key == 'male')
-                                    $male_priority[$person->user->id][] = $likes->user;
-                                elseif ($key == 'female')
+                                    $male_priority[$person->user->id][] = $likes->user; elseif ($key == 'female')
                                     $female_priority[$person->user->id][] = $likes->user;
                                 unset($copy[$idx]);
                             }
@@ -175,23 +173,22 @@ class MatchDancers implements ShouldQueue
                     }
                 }
 
-                foreach(json_decode($person->priorities) as $priority) {
+                foreach (json_decode($person->priorities) as $priority) {
                     if ($key == 'male' && !array_key_exists($person->user->id, $male_priority)) {
                         $male_priority[$person->user->id] = array();
                         break;
-                    }
-                    elseif ($key == 'female' && !array_key_exists($person->user->id, $female_priority)) {
+                    } elseif ($key == 'female' && !array_key_exists($person->user->id, $female_priority)) {
                         $female_priority[$person->user->id] = array();
                         break;
                     }
 
-                    switch($priority) {
+                    switch ($priority) {
                         case 'age':
                             if ($key == 'male') {
                                 $temp_list = $this->sortingAge($person, $male_priority[$person->user->id]);
                                 foreach ($temp_list as $temp_user)
                                     $male_priority[$person->user->id][] = $temp_user['id'];
-                            } elseif ($key == 'female'){
+                            } elseif ($key == 'female') {
                                 $temp_list = $this->sortingAge($person, $female_priority[$person->user->id]);
                                 foreach ($temp_list as $temp_user)
                                     $female_priority[$person->user->id][] = $temp_user['id'];
@@ -225,44 +222,111 @@ class MatchDancers implements ShouldQueue
                 /**
                  * This will add sorted (best to worst) persons that match the range and
                  * with there already defined preference of the dancer to dance with.
-                 */
-                foreach(json_decode($person->priorities) as $priority) {
+                 */ //                foreach(json_decode($person->priorities) as $priority) {
+                //
+                //                    switch($priority) {
+                //                        case 'age':
+                //                            $list = $this->get_age_by_range($person->user->birthday, $copy);
+                //                            $list = $this->sortingAge($person, $list);
+                //                            foreach ($list as $each) {
+                //                                if ($key == 'male')
+                //                                    $male_priority[$person->user->id][] = $each['id'];
+                //                                elseif ($key == 'female')
+                //                                    $female_priority[$person->user->id][] = $each['id'];
+                //                            }
+                //                            $list = null;
+                //                            break;
+                //                        case 'height':
+                //                            $list = $this->filter_by_range($person->user->height, $copy, 'height');
+                //                            $list = $this->sorting_height_or_level($person, $list, 'height');
+                //                            foreach ($list as $each) {
+                //                                if ($key == 'male')
+                //                                    $male_priority[$person->user->id][] = $each['id'];
+                //                                elseif ($key == 'female')
+                //                                    $female_priority[$person->user->id][] = $each['id'];
+                //                            }
+                //                            break;
+                //                        case 'level':
+                //                            $list = $this->filter_by_range($person->user->dancing_level, $copy, 'level');
+                //                            $list = $this->sorting_height_or_level($person, $list, 'level');
+                //                            foreach ($list as $each) {
+                //                                if ($key == 'male')
+                //                                    $male_priority[$person->user->id][] = $each['id'];
+                //                                elseif ($key == 'female')
+                //                                    $female_priority[$person->user->id][] = $each['id'];
+                //                            }
+                //                            break;
+                //                    }
+                //                }
 
-                    switch($priority) {
-                        case 'age':
-                            $list = $this->get_age_by_range($person->user->birthday, $copy);
-                            $list = $this->sortingAge($person, $list);
-                            foreach ($list as $each) {
-                                if ($key == 'male')
-                                    $male_priority[$person->user->id][] = $each['id'];
-                                elseif ($key == 'female')
-                                    $female_priority[$person->user->id][] = $each['id'];
-                            }
-                            $list = null;
-                            break;
-                        case 'height':
-                            $list = $this->filter_by_range($person->user->height, $copy, 'height');
-                            $list = $this->sorting_height_or_level($person, $list, 'height');
-                            foreach ($list as $each) {
-                                if ($key == 'male')
-                                    $male_priority[$person->user->id][] = $each['id'];
-                                elseif ($key == 'female')
-                                    $female_priority[$person->user->id][] = $each['id'];
-                            }
-                            break;
-                        case 'level':
-                            $list = $this->filter_by_range($person->user->dancing_level, $copy, 'level');
-                            $list = $this->sorting_height_or_level($person, $list, 'level');
-                            foreach ($list as $each) {
-                                if ($key == 'male')
-                                    $male_priority[$person->user->id][] = $each['id'];
-                                elseif ($key == 'female')
-                                    $female_priority[$person->user->id][] = $each['id'];
-                            }
-                            break;
+                /**
+                 * Implementing the second (or first depending on previous liked dancers) to order prio by score.
+                 * The first prio will get 60% points, second 30% and the last prio only 30%.
+                 * These are the weighting for the preference for the dancers.
+                 */
+                $now = new DateTime();
+                $user_age = $now->diff(new DateTime($person->user->birthday))->y;
+
+                foreach ($copy as $idx => $dancer) {
+                    $copy[$idx]['score'] = 0;
+                    foreach (json_decode($person->priorities) as $pos => $priority) {
+                        $score = 0;
+                        switch ($priority) {
+                            case 'age':
+                                $now = new DateTime();
+                                $dancer_age = $now->diff(new DateTime($dancer->user->birthday))->y;
+                                $difference = 10 - abs($user_age - $dancer_age);
+                                $score = ($difference > 0) ? $difference : 0;
+                                break;
+                            case 'height':
+                                $dancer_height = $dancer->user->height;
+                                $dancer_height = ($dancer->user->gender == 'male') ? $dancer_height - 10 : $dancer_height + 10;
+                                $difference = 0;
+                                if ($dancer->user->gender == 'male' && $person->user->heigh <= $dancer_height)
+                                    $difference = 10 - abs($dancer_height - $person->user->height);
+                                elseif ($dancer->user->gender == 'female' && $person->user->height >= $dancer_height)
+                                    $difference = 10 - abs($dancer_height - $person->user->height);
+                                $score = ($difference > 0) ? $difference : 0;
+                                break;
+                            case 'level':
+                                $difference = abs($person->user->dancing_level - $dancer->user->dancing_level);
+                                if ($difference == 0)
+                                    $score = 10; elseif ($difference == 1)
+                                    $score = 5;
+                                break;
+                        }
+
+                        switch ($pos) {
+                            case 0:
+                                $copy[$idx]['score'] += round($score * 0.6, 2);
+                                break;
+                            case 1:
+                                $copy[$idx]['score'] += round($score * 0.3, 2);
+                                break;
+                            case 2:
+                                $copy[$idx]['score'] += round($score * 0.1, 2);
+                                break;
+                        }
+                    }
+
+                    $copy[$idx]['score'] = round($copy[$idx]['score'], 2);
+                    $copy[$dancer->user->id] = $copy[$idx]['score'];
+                    unset($copy[$idx]);
+                }
+                arsort($copy);
+                foreach($copy as $dancer_id => $score) {
+                    if ($score > 0) {
+                        if ($key == 'male')
+                            $male_priority[$person->user->id][] = $dancer_id;
+                        elseif ($key == 'female')
+                            $female_priority[$person->user->id][] = $dancer_id;
+                        unset($copy[$dancer_id]);
+                    }
+                    else {
+                        unset($copy[$dancer_id]);
+                        $copy[] = $dancer_id;
                     }
                 }
-
             /**
              * These are the rest of the persons that could not be matched.
              * This list will be shuffled and added at the end
@@ -270,9 +334,9 @@ class MatchDancers implements ShouldQueue
 //            shuffle($copy);
             foreach ($copy as $pos => $user){
                 if ($key == 'male')
-                    $male_priority[$person->user->id][] = $user->user->id;
+                    $male_priority[$person->user->id][] = $user;
                 elseif ($key == 'female')
-                    $female_priority[$person->user->id][] = $user->user->id;
+                    $female_priority[$person->user->id][] = $user;
                 unset($copy[$pos]);
             }
             if ($key == 'male')
