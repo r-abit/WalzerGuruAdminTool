@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\PreviousDancePartner;
 use App\Models\EventParticipation;
 use Illuminate\Database\Seeder;
 use App\Models\LikedUsers;
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DancingLevelSeeder::class,
             UserSeeder::class,
+            PreviousDancePartnerSeeder::class,
         ]);
 
         User::factory(297)->create();
