@@ -22,7 +22,7 @@ class EventsController extends Controller
         if ($user->role == 'organizer')
             $events = $user->organizer->events;
         else
-            $events = Event::orderBy('date')->get()->toArray();
+            $events = Event::where('date', '>=', Carbon::now('Europe/Stockholm'))->orderBy('date')->get()->toArray();
 
         if ($user->role == 'user') {
             $temp = array();
