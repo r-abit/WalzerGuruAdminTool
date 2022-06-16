@@ -33,6 +33,7 @@ class DancingController extends Controller
                     $user['liked'] = true;
                     $all_dancers[] = $user;
                     $liked_users[] = $user;
+                    break;
                 }
             }
             if (!$user['liked']) {
@@ -54,7 +55,6 @@ class DancingController extends Controller
         else
             LikedUsers::create(['user' => Auth::id(), 'likes' => $request->partner_id]);
 
-//        $this->x($request);
         $fields = ['id', 'username', 'height', 'dancing_level', 'birthday', 'profile_photo_path'];
         $liked_list = LikedUsers::where('user', Auth::id())->get()->toArray();
         $previous_dancers = PreviousDancePartner::where('user', Auth::id())->get()->toArray();
@@ -74,54 +74,6 @@ class DancingController extends Controller
             }
             if (!$user['liked']) {
                 $all_dancers[] = $user;
-            }
-        }
-
-        return Jetstream::inertia()->render($request, 'Dancing/Show', [
-            'liked_users' => $liked_users,
-            'dancing_lvl' => DancingLevel::get(),
-            'all_users' => $all_dancers, // Placeholder for the to-do above
-        ]);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private function x(Request $request)
-    {
-        $fields = ['id', 'username', 'height', 'dancing_level', 'birthday', 'profile_photo_path'];
-        $liked_list = LikedUsers::where('user', Auth::id())->get()->toArray();
-        $previous_dancers = PreviousDancePartner::where('user', Auth::id())->get()->toArray();
-
-        $all_dancers = array();
-        $liked_users = array();
-        foreach ($previous_dancers as $dancer) {
-            foreach ($liked_list as $liked_user) {
-                if ($dancer['partner'] == $liked_user['likes']) {
-                    $user = User::where('id', $dancer['partner'])->first($fields)->toArray();
-                    $user['liked'] = true;
-                    $all_dancers[] = $user;
-                    $liked_users[] = $user;
-                } else {
-                    $user = User::where('id', $dancer['partner'])->first($fields)->toArray();
-                    $user['liked'] = false;
-                    $all_dancers[] = $user;
-                }
             }
         }
 
