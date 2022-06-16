@@ -1,10 +1,25 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3'
+import axios from 'axios'
+import { Inertia } from '@inertiajs/inertia'
 
 const props = defineProps({
     user: Object,
     list: Object,
 });
+
+const like = (user_id, user_liked) => {
+
+    Inertia.get('/dancing/like',
+        {
+            partner_id: user_id,
+            partner_liked: user_liked
+        },
+        {
+            preserveState: true,
+            preserveScroll: true
+        });
+}
 
 // Reference: https://thewebdev.info/2021/03/20/how-to-calculate-the-age-given-the-birth-date-in-yyyy-mm-dd-format-with-javascript/
 const calculateAge = (birthday) => {
@@ -54,6 +69,7 @@ const calculateAge = (birthday) => {
                 </td>
                 <td class="px-3 py-3 flex justify-center items-center">
                     <svg
+                        @click="like(user.id, user.liked)"
                         :class="user.liked  ? 'fill-red-500 hover:fill-red-200' : 'fill-red-200 hover:fill-red-500'"
                         class="h-6 w-6 cursor-pointer"
                         xmlns="http://www.w3.org/2000/svg"

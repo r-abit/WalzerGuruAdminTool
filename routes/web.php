@@ -53,7 +53,7 @@ Route::middleware([
 
     Route::controller(DancingController::class)->group(function () {
         Route::get('/dancing', 'show')->name('dancing.show');
-        Route::delete('/dancing', 'delete')->name('dancing.delete');
+        Route::get('/dancing/like', 'like')->name('dancing.like');
     });
 
     Route::controller(DashboardController::class)->group(function () {

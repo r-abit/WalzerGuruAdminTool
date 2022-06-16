@@ -3,15 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\DancingLevel;
-use App\Models\EventParticipation;
 use App\Models\LikedUsers;
 use App\Models\PreviousDancePartner;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Jetstream\Jetstream;
-use Illuminate\Http\Request;
-use App\Models\Organizer;
-use Inertia\Response;
 
 class DancingController extends Controller
 {
@@ -22,49 +19,116 @@ class DancingController extends Controller
          * Liked and also the rest.
          * As separate lists.
          */
-        $liked_by_id = LikedUsers::where('user', Auth::id())->get()->toArray();
-        $liked_users = array();
         $fields = ['id', 'username', 'height', 'dancing_level', 'birthday', 'profile_photo_path'];
-        $dancing_levels = DancingLevel::get()->toArray();
-        foreach ($liked_by_id as $id){
-            $user = User::where('id', $id)->first($fields)->toArray();
-            foreach ($dancing_levels as $level){
-                if ($level['id'] == $user['dancing_level']) {
-                    $user['dancing_level'] = $level['level'];
-                    break;
+        $liked_list = LikedUsers::where('user', Auth::id())->get()->toArray();
+        $previous_dancers = PreviousDancePartner::where('user', Auth::id())->get()->toArray();
+
+        $all_dancers = array();
+        $liked_users = array();
+        foreach ($previous_dancers as $dancer) {
+            $user = User::where('id', $dancer['partner'])->first($fields)->toArray();
+            $user['liked'] = false;
+            foreach ($liked_list as $liked_user) {
+                if ($dancer['partner'] == $liked_user['likes']) {
+                    $user['liked'] = true;
+                    $all_dancers[] = $user;
+                    $liked_users[] = $user;
                 }
             }
-            $user['liked'] = true;
-            $liked_users[] = $user;
-        }
-
-        $not_liked_users = $liked_users;
-        $liked_users_id = array_column($liked_users, 'id');
-        foreach(PreviousDancePartner::where('user', Auth::id())->get()->toArray() as $dance_partner) {
-            $user = User::where('id', $dance_partner['id'])->first($fields)->toArray();
-            foreach ($dancing_levels as $level){
-                if ($level['id'] == $user['dancing_level']) {
-                    $user['dancing_level'] = $level['level'];
-                    break;
-                }
-            }
-
-            if(!in_array($dance_partner['id'], $liked_users)){
-                $user['liked'] = false;
-                $not_liked_users[] = $user;
+            if (!$user['liked']) {
+                $all_dancers[] = $user;
             }
         }
-        usort($not_liked_users, function($a, $b) {
-            return $a['username'] <=> $b['username'];
-        });
-        usort($liked_users, function($a, $b) {
-            return $a['username'] <=> $b['username'];
-        });
 
         return Jetstream::inertia()->render($request, 'Dancing/Show', [
             'liked_users' => $liked_users,
             'dancing_lvl' => DancingLevel::get(),
-            'all_users' => $not_liked_users, // Placeholder for the to-do above
+            'all_users' => $all_dancers, // Placeholder for the to-do above
+        ]);
+    }
+
+    public function like(Request $request)
+    {
+        if ($request->partner_liked == 'true')
+            LikedUsers::where('user', Auth::id())->where('likes', $request->partner_id)->delete();
+        else
+            LikedUsers::create(['user' => Auth::id(), 'likes' => $request->partner_id]);
+
+//        $this->x($request);
+        $fields = ['id', 'username', 'height', 'dancing_level', 'birthday', 'profile_photo_path'];
+        $liked_list = LikedUsers::where('user', Auth::id())->get()->toArray();
+        $previous_dancers = PreviousDancePartner::where('user', Auth::id())->get()->toArray();
+
+        $all_dancers = array();
+        $liked_users = array();
+        foreach ($previous_dancers as $dancer) {
+            $user = User::where('id', $dancer['partner'])->first($fields)->toArray();
+            $user['liked'] = false;
+            foreach ($liked_list as $liked_user) {
+                if ($dancer['partner'] == $liked_user['likes']) {
+                    $user['liked'] = true;
+                    $all_dancers[] = $user;
+                    $liked_users[] = $user;
+                    break;
+                }
+            }
+            if (!$user['liked']) {
+                $all_dancers[] = $user;
+            }
+        }
+
+        return Jetstream::inertia()->render($request, 'Dancing/Show', [
+            'liked_users' => $liked_users,
+            'dancing_lvl' => DancingLevel::get(),
+            'all_users' => $all_dancers, // Placeholder for the to-do above
+        ]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private function x(Request $request)
+    {
+        $fields = ['id', 'username', 'height', 'dancing_level', 'birthday', 'profile_photo_path'];
+        $liked_list = LikedUsers::where('user', Auth::id())->get()->toArray();
+        $previous_dancers = PreviousDancePartner::where('user', Auth::id())->get()->toArray();
+
+        $all_dancers = array();
+        $liked_users = array();
+        foreach ($previous_dancers as $dancer) {
+            foreach ($liked_list as $liked_user) {
+                if ($dancer['partner'] == $liked_user['likes']) {
+                    $user = User::where('id', $dancer['partner'])->first($fields)->toArray();
+                    $user['liked'] = true;
+                    $all_dancers[] = $user;
+                    $liked_users[] = $user;
+                } else {
+                    $user = User::where('id', $dancer['partner'])->first($fields)->toArray();
+                    $user['liked'] = false;
+                    $all_dancers[] = $user;
+                }
+            }
+        }
+
+        return Jetstream::inertia()->render($request, 'Dancing/Show', [
+            'liked_users' => $liked_users,
+            'dancing_lvl' => DancingLevel::get(),
+            'all_users' => $all_dancers, // Placeholder for the to-do above
         ]);
     }
 }
