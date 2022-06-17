@@ -30,7 +30,7 @@ const calculateAge = (birthday) => {
 </script>
 
 <template>
-    <table class="mt-5 md:mt-0 md:col-span-2 px-4 py-3 bg-gray-50 sm:px-6 shadow sm:rounded-md sm:rounded-md min-w-full leading-normal">
+    <table class="mt-5 md:mt-0 md:col-span-2 px-4 py-3 bg-gray-50 sm:px-6 shadow sm:rounded-md sm:rounded-md leading-normal">
         <thead>
             <tr class="border-b-0 text-left border-gray-300 bg-gray-200">
                 <th class="px-3 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -46,7 +46,7 @@ const calculateAge = (birthday) => {
                     Alter
                 </th>
                 <th class="px-3 py-3 text-xs font-semibold text-center text-gray-600 uppercase tracking-wider">
-                    Status
+                    Wunschpartner
                 </th>
             </tr>
         </thead>

@@ -82,7 +82,7 @@ const onDelete = (user) => {
                     </template>
                 </Draggable>
 
-                <span class="col-start-1 col-end-2 font-semibold">Frühere Tanzpartner bevorzugen:</span>
+                <span class="col-start-1 col-end-2 font-semibold">Mit Ihren Wunschpartner tanzen:</span>
                 <div class="col-start-2 col-end-3">
                     <Switch v-model:checked="previousDancers"/>
                 </div>
