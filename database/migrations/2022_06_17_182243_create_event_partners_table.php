@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('event_partners', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('partner')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('partner')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
             $table->timestamps();
         });

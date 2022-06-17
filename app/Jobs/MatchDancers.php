@@ -3,13 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\EventParticipation;
+use App\Models\EventPartner;
 use App\Models\LikedUsers;
+use DateTime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use DateTime;
 use Illuminate\Support\Facades\Log;
 
 class MatchDancers implements ShouldQueue
@@ -222,6 +223,8 @@ class MatchDancers implements ShouldQueue
                 /**
                  * This will add sorted (best to worst) persons that match the range and
                  * with there already defined preference of the dancer to dance with.
+                 * This commented code was used previously to define priorities by range.
+                 * Now it is handled by score. In case that we need this function in the future I left it here.
                  */ //                foreach(json_decode($person->priorities) as $priority) {
                 //
                 //                    switch($priority) {
@@ -403,14 +406,21 @@ class MatchDancers implements ShouldQueue
             }
         }
 
+        $data = array();
         $result = array('match' => array(), 'no_match' => array());
 
         foreach ($table_b as $i => $person_b){
-            if ($person_b['found'] == true)
-                $result['match'][$i] = array_pop($person_b['list']);
+            if ($person_b['found'] == true){
+                $partner_id = array_pop($person_b['list']);
+                $result['match'][$i] = $partner_id;
+                $data[] = array('user' => $i, 'partner' => $partner_id, 'event_id' => $this->event_id);
+                $data[] = array('user' => $partner_id, 'partner' => $i, 'event_id' => $this->event_id);
+            }
             else
                 $result['no_match'][] = $i;
         }
+
+        EventPartner::insert($data);
 
         Log::info($result);
     }
