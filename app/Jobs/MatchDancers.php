@@ -334,7 +334,7 @@ class MatchDancers implements ShouldQueue
              * These are the rest of the persons that could not be matched.
              * This list will be shuffled and added at the end
              */
-//            shuffle($copy);
+            shuffle($copy);
             foreach ($copy as $pos => $user){
                 if ($key == 'male')
                     $male_priority[$person->user->id][] = $user;
