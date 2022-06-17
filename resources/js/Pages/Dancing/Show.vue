@@ -20,11 +20,15 @@ const props = defineProps({
             </h2>
         </template>
 
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <p class="text-sm font-semibold text-gray-600 uppercase pl-2 pb-2">Gefallene Tänzer</p>
-            <DancedUsers :user="$page.props.user" :list="$page.props.liked_users" />
-            <p class="text-sm font-semibold text-gray-600 uppercase pl-2 pb-2 mt-5">Bereits getanzt mit</p>
-            <DancedUsers :user="$page.props.user" :list="$page.props.all_users" />
+        <div class="max-w-7xl mx-auto flex gap-4 py-6 px-4 sm:px-6 lg:px-8">
+            <div>
+                <p class="text-sm font-semibold text-gray-600 uppercase">Gefallene Tänzer</p>
+                <DancedUsers :user="$page.props.user" :list="$page.props.liked_users" />
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-gray-600 uppercase">Bereits getanzt mit</p>
+                <DancedUsers :user="$page.props.user" :list="$page.props.all_users" />
+            </div>
         </div>
 
     </AppLayout>
