@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventPartner;
 use Illuminate\Support\Facades\Auth;
 use App\Models\EventParticipation;
 use Laravel\Jetstream\Jetstream;
@@ -27,10 +28,33 @@ class DashboardController extends Controller
         $upcoming_events = array();
         foreach ($events as $event){
             $date_now = date('Y-m-d H:i:s',strtotime('now'));
-            if ($event['date'] > $date_now)
-                $upcoming_events[] = $event;
-            else
-                $previous_events[] = $event;
+            if ($event['date'] > $date_now) {
+                if (Auth::user()->role == 'user')
+                    $upcoming_events[] = array('event' => $event);
+                else
+                    $upcoming_events[] = $event;
+            }
+            else {
+                if (Auth::user()->role == 'user') {
+                    $matching_event_partner = EventPartner::where('event_id', $event['id'])
+                        ->orderByDesc('id')
+                        ->first();
+                    if ($matching_event_partner) {
+                        $matching_event_partner = $matching_event_partner->toArray();
+                        $fields = ['id', 'username', 'height', 'dancing_level', 'birthday', 'profile_photo_path'];
+                        $user = User::where('id', $matching_event_partner['partner'])->first($fields)->toArray();
+                        $previous_events[] = array('event' => $event, 'partner' => $user);
+                    }
+                    else
+                        $previous_events[] = array('event' => $event);
+                }
+                else {
+                    if (Auth::user()->role == 'user')
+                        $previous_events[] = array('event' => $event);
+                    else
+                        $previous_events[] = $event;
+                }
+            }
         }
 
         return Jetstream::inertia()->render($request, 'Dashboard/Show', [

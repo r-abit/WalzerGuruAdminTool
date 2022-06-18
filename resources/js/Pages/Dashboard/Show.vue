@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import EventsList from '@/Pages/Events/Partials/EventsList.vue'
+import EventsList from '@/Pages/Dashboard/Partials/ExtandedEventsList.vue'
 import Welcome from "../../Jetstream/Welcome";
 
 const props = defineProps({
