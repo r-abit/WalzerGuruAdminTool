@@ -1,6 +1,4 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3'
-import axios from 'axios'
 import { Inertia } from '@inertiajs/inertia'
 
 const props = defineProps({

@@ -19,6 +19,13 @@ const getOrganizer = (org_id) => {
     );
     return x;
 }
+
+// Reference: https://thewebdev.info/2021/03/20/how-to-calculate-the-age-given-the-birth-date-in-yyyy-mm-dd-format-with-javascript/
+const calculateAge = (birthday) => {
+    const ageDifMs = Date.now() - new Date(birthday).getTime();
+    const ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
 </script>
 
 <template>
@@ -143,7 +150,7 @@ const getOrganizer = (org_id) => {
             >
                 <th colspan="6" class="columns-7 px-3 pb-3 font-normal">
                     <p><span class="font-bold">User: </span>{{ event.partner.username }}</p>
-                    <p><span class="font-bold">Alter: </span>{{ event.partner.birthday }}</p>
+                    <p><span class="font-bold">Alter: </span>{{ calculateAge(event.partner.birthday) }}</p>
                     <p><span class="font-bold">Größe: </span>{{ event.partner.height }}</p>
                     <p><span class="font-bold">Tanzlevel: </span>{{ event.partner.dancing_level }}</p>
                 </th>
