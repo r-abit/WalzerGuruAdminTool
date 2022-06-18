@@ -271,6 +271,7 @@ class MatchDancers implements ShouldQueue
                 $user_age = $now->diff(new DateTime($person->user->birthday))->y;
 
                 foreach ($copy as $idx => $dancer) {
+                    Log::info(sizeof($copy));
                     $copy[$idx]['score'] = 0;
                     foreach (json_decode($person->priorities) as $pos => $priority) {
                         $score = 0;
@@ -370,6 +371,9 @@ class MatchDancers implements ShouldQueue
         }
 
         $completed = false;
+
+//        var_dump(sizeof($table_a) . ' - ' . sizeof($table_b));
+//        dd($table_b);
         while (!$completed) {
             foreach ($table_a as $a_id => $item) {
                 $completed = true;

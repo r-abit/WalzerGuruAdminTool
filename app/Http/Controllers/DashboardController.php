@@ -29,8 +29,19 @@ class DashboardController extends Controller
         foreach ($events as $event){
             $date_now = date('Y-m-d H:i:s',strtotime('now'));
             if ($event['date'] > $date_now) {
-                if (Auth::user()->role == 'user')
-                    $upcoming_events[] = array('event' => $event);
+                if (Auth::user()->role == 'user'){
+                    $matching_event_partner = EventPartner::where('event_id', $event['id'])
+                        ->orderByDesc('id')
+                        ->first();
+                    if ($matching_event_partner) {
+                        $matching_event_partner = $matching_event_partner->toArray();
+                        $fields = ['id', 'username', 'height', 'dancing_level', 'birthday', 'profile_photo_path'];
+                        $user = User::where('id', $matching_event_partner['partner'])->first($fields)->toArray();
+                        $upcoming_events[] = array('event' => $event, 'partner' => $user);
+                    }
+                    else
+                        $upcoming_events[] = array('event' => $event);
+                }
                 else
                     $upcoming_events[] = $event;
             }
