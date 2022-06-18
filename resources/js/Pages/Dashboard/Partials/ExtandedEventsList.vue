@@ -160,14 +160,14 @@ const getOrganizer = (org_id) => {
             </tr>
             <tr
                 v-if="event.hasOwnProperty('partner')"
-                class="text-sm text-left -mt-5 bg-gray-100"
+                class="text-sm text-left -mt-5 bg-gradient-to-r from-slate-300 to-slate-50"
                 :class="[props.clickable ? 'cursor-pointer' : 'cursor-default']"
             >
-                <th colspan="5" class="columns-5 px-3">
-                    <p class="font-normal">User: {{ event.partner.username }}</p>
-                    <p class="font-normal">Alter: {{ event.partner.birthday }}</p>
-                    <p class="font-normal">Größe: {{ event.partner.height }}</p>
-                    <p class="font-normal">Tanzlevel: {{ event.partner.dancing_level }}</p>
+                <th colspan="6" class="columns-7 px-3 font-normal">
+                    <p><span class="font-bold">User: </span>{{ event.partner.username }}</p>
+                    <p><span class="font-bold">Alter: </span>{{ event.partner.birthday }}</p>
+                    <p><span class="font-bold">Größe: </span>{{ event.partner.height }}</p>
+                    <p><span class="font-bold">Tanzlevel: </span>{{ event.partner.dancing_level }}</p>
                 </th>
             </tr>
         </template>
