@@ -48,6 +48,7 @@ class DashboardController extends Controller
             else {
                 if (Auth::user()->role == 'user') {
                     $matching_event_partner = EventPartner::where('event_id', $event['id'])
+                        ->where('user', Auth::id())
                         ->orderByDesc('id')
                         ->first();
                     if ($matching_event_partner) {

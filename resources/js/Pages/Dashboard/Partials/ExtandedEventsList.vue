@@ -10,25 +10,6 @@ const props = defineProps({
     user: Object,
 });
 
-const updateForm = (event) => {
-    if (!props.clickable) return;
-
-    if (props.user.role === 'user') {
-        document.getElementById('eventList').value = event.event.id;
-        return;
-    }
-
-    let time = event.event.date.split(' ')[1].split(':');
-
-    bus.emit('event.event.form', {
-        event: {
-            ...event,
-            date: event.event.date.split(' ')[0],
-            time: time[0] + ':' + time[1],
-        }
-    })
-}
-
 const getOrganizer = (org_id) => {
     var x;
     props.organizers.some(
@@ -73,20 +54,20 @@ const getOrganizer = (org_id) => {
                 class="text-sm text-left border-b border-gray-200 hover:bg-gray-100"
                 :class="[props.clickable ? 'cursor-pointer' : 'cursor-default']"
             >
-                <td class="px-3 py-3" @click="updateForm(event)">
+                <td class="px-3 py-3">
                     {{ event.event.name }}
                 </td>
-                <td class="px-3 py-3" @click="updateForm(event)">
+                <td class="px-3 py-3">
                     {{ getOrganizer(event.event.organizer_id) }}
                 </td>
 
-                <td class="px-3 py-3" @click="updateForm(event)">
+                <td class="px-3 py-3">
                     {{ event.event.participants }}
                 </td>
-                <td class="px-3 py-3" @click="updateForm(event)">
+                <td class="px-3 py-3">
                     {{ event.event.dresscode }}
                 </td>
-                <td class="px-3 py-3" @click="updateForm(event)">
+                <td class="px-3 py-3">
                     {{ event.event.date }}
                 </td>
                 <td v-if="props.deletable" class="px-3 py-3 flex justify-center items-center cursor-default">
@@ -118,22 +99,19 @@ const getOrganizer = (org_id) => {
                 class="text-sm text-left border-t border-gray-200"
                 :class="props.clickable ? 'cursor-pointer' : 'cursor-default'"
             >
-                <td
-                    class="px-3"
-                    :class="event.hasOwnProperty('partner') ? 'pt-3' : 'py-3'"
-                >
+                <td class="px-3" :class="event.hasOwnProperty('partner') ? 'pt-3' : 'py-3'">
                     {{ event.event.name }}
                 </td>
-                <td class="px-3" @click="updateForm(event)">
+                <td class="px-3" :class="event.hasOwnProperty('partner') ? 'pt-3' : 'py-3'">
                     {{ getOrganizer(event.event.organizer_id) }}
                 </td>
-                <td class="px-3" @click="updateForm(event)">
+                <td class="px-3" :class="event.hasOwnProperty('partner') ? 'pt-3' : 'py-3'">
                     {{ event.event.participants }}
                 </td>
-                <td class="px-3" @click="updateForm(event)">
+                <td class="px-3" :class="event.hasOwnProperty('partner') ? 'pt-3' : 'py-3'">
                     {{ event.event.dresscode }}
                 </td>
-                <td class="px-3" @click="updateForm(event)">
+                <td class="px-3" :class="event.hasOwnProperty('partner') ? 'pt-3' : 'py-3'">
                     {{ event.event.date }}
                 </td>
                 <td v-if="props.deletable" class="px-3 flex justify-center items-center cursor-default">
@@ -160,10 +138,10 @@ const getOrganizer = (org_id) => {
             </tr>
             <tr
                 v-if="event.hasOwnProperty('partner')"
-                class="text-sm text-left -mt-5 bg-gradient-to-r from-slate-300 to-slate-50"
+                class="text-sm text-left -mt-5"
                 :class="[props.clickable ? 'cursor-pointer' : 'cursor-default']"
             >
-                <th colspan="6" class="columns-7 px-3 font-normal">
+                <th colspan="6" class="columns-7 px-3 pb-3 font-normal">
                     <p><span class="font-bold">User: </span>{{ event.partner.username }}</p>
                     <p><span class="font-bold">Alter: </span>{{ event.partner.birthday }}</p>
                     <p><span class="font-bold">Größe: </span>{{ event.partner.height }}</p>

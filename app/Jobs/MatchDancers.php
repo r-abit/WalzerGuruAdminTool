@@ -2,9 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Models\Event;
 use App\Models\EventParticipation;
 use App\Models\EventPartner;
 use App\Models\LikedUsers;
+use App\Models\PreviousDancePartner;
 use DateTime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -271,7 +273,7 @@ class MatchDancers implements ShouldQueue
                 $user_age = $now->diff(new DateTime($person->user->birthday))->y;
 
                 foreach ($copy as $idx => $dancer) {
-                    Log::info(sizeof($copy));
+
                     $copy[$idx]['score'] = 0;
                     foreach (json_decode($person->priorities) as $pos => $priority) {
                         $score = 0;
@@ -372,8 +374,6 @@ class MatchDancers implements ShouldQueue
 
         $completed = false;
 
-//        var_dump(sizeof($table_a) . ' - ' . sizeof($table_b));
-//        dd($table_b);
         while (!$completed) {
             foreach ($table_a as $a_id => $item) {
                 $completed = true;
@@ -422,6 +422,14 @@ class MatchDancers implements ShouldQueue
             }
             else
                 $result['no_match'][] = $i;
+        }
+
+        $event_date = Event::where('id', $this->event_id)->first('date')->toArray()['date'];
+        $date_now = date('Y-m-d H:i:s',strtotime('now'));
+        if ($event_date <= $date_now){
+            foreach ($data as $row)
+                if(!PreviousDancePartner::where('user', $row['user'])->where('partner', $row['partner'])->exists())
+                    PreviousDancePartner::insert($row);
         }
 
         EventPartner::insert($data);
