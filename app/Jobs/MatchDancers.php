@@ -59,6 +59,8 @@ class MatchDancers implements ShouldQueue
     }
 
     private function sorting_height_or_level($user, &$list, $sort): array {
+        var_dump($user);
+//        var_dump($list);
         $sorted = array();
         $i = 0;
         while (sizeof($list)) {
@@ -273,7 +275,7 @@ class MatchDancers implements ShouldQueue
                 $user_age = $now->diff(new DateTime($person->user->birthday))->y;
 
                 foreach ($copy as $idx => $dancer) {
-
+                    $copy[$idx] = array();
                     $copy[$idx]['score'] = 0;
                     foreach (json_decode($person->priorities) as $pos => $priority) {
                         $score = 0;
@@ -373,6 +375,8 @@ class MatchDancers implements ShouldQueue
         }
 
         $completed = false;
+//        Log::info($table_a);
+//        Log::info($table_b);
 
         while (!$completed) {
             foreach ($table_a as $a_id => $item) {
@@ -405,6 +409,8 @@ class MatchDancers implements ShouldQueue
                             array_shift($table_a[$change_found]['list']);
                             $table_b[$possible_partner]['list'] = $tmp;
                         }
+                        else
+                            array_shift($table_a[$a_id]['list']);
                     }
                 }
             }
