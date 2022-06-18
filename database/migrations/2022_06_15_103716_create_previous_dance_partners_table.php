@@ -29,6 +29,11 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('previous_dance_partner');
+        Schema::table('previous_dance_partners', function (Blueprint $table) {
+            $table->dropForeign('previous_dance_partners_user_foreign');
+            $table->dropForeign('previous_dance_partners_partner_foreign');
+            $table->dropForeign('previous_dance_partners_event_id_foreign');
+        });
+        Schema::dropIfExists('previous_dance_partners');
     }
 };
