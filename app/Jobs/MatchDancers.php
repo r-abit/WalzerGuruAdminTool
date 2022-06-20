@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
 use App\Models\Event;
 use App\Models\EventParticipation;
 use App\Models\EventPartner;
@@ -43,13 +44,25 @@ class MatchDancers implements ShouldQueue
 
         $sorted = array();
         $i = 0;
+        if (array_key_exists('list', $list)) $list = $list['list'];
         while (sizeof($list)) {
             foreach ($list as $key => $dancer) {
-                $date = new DateTime($dancer['birthday']);
+                Log::info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                Log::info($user);
+                Log::info("-------");
+                Log::info($list);
+                Log::info("-------");
+                Log::info($key);
+                Log::info("-------");
+                Log::info($dancer);
+                Log::info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                $dancer = User::where('id', $dancer)->first();
+//                dd("YOUR DONE LOOSER!");
+                $date = new DateTime($dancer->birthday);
                 $dancer_age = $now->diff($date)->y;
 
                 if ($dancer_age + $i == $user_age || $dancer_age - $i == $user_age){
-                    $sorted[] = $dancer;
+                    $sorted[] = $dancer->id;
                     unset($list[$key]);
                 }
             }
@@ -59,27 +72,55 @@ class MatchDancers implements ShouldQueue
     }
 
     private function sorting_height_or_level($user, &$list, $sort): array {
-        var_dump($user);
-//        var_dump($list);
         $sorted = array();
         $i = 0;
+        if (array_key_exists('list', $list)) $list = $list['list'];
         while (sizeof($list)) {
-            foreach ($list as $key => $dancer) {
+            Log::info($sorted);
+            foreach ($list as $key => $dancer_id) {
                 if ($sort == 'height'){
-                    if ($dancer['height'] + $i == $user->user->height || $dancer['height'] - $i == $user->user->height){
-                        $sorted[] = $dancer;
+                    var_dump("HEIGHT");
+                    var_dump($list);
+//                    dd($dancer_id);
+                    $dancer_height = User::where('id', $dancer_id)->first()->height;
+                    var_dump("bbbbbbbbbb");
+                    if ($dancer_height + $i == $user->user->height || $dancer_height - $i == $user->user->height){
+                        $sorted[] = $dancer_id;
                         unset($list[$key]);
                     }
                 }
                 elseif ($sort == 'level'){
-                    if ($dancer['dancing_level'] + $i == $user->user->dancing_level || $dancer['dancing_level'] - $i == $user->user->dancing_level) {
-                        $sorted[] = $dancer;
+                    var_dump("LEVEL");
+                    //TODO: user is null because there are only the id's coming in the list.... fuck!
+                    var_dump("!!!!!!!!!!!!!!!!!!!!!!! ?> " . $dancer_id);
+                    var_dump($this->event_id);
+//                    dd($list);
+//                    var_dump($list['list']);
+                    $dancer_dancing_level = User::where('id', $dancer_id)->first()->dancing_level;
+//                    Log::info("----->>>>>> " . $user->user->dancing_level  . " - " . $dancer_dancing_level . " - " . $i . " ???? => " . sizeof($sorted) . " = " . sizeof($list['list']));
+
+//                    var_dump($list['list']);
+                    if (($dancer_dancing_level + $i) == $user->user->dancing_level || ($dancer_dancing_level - $i) == $user->user->dancing_level) {
+                        var_dump("-------------------------------");
+                        var_dump($sorted);
+                        $sorted[] = $dancer_id;
+                        var_dump($sorted);
+                        var_dump("-------------------------------");
                         unset($list[$key]);
+                        var_dump("?????ßßßßßßßßßßßßßßßßßßßß => " . $key);
+                        var_dump($list);
                     }
+                    Log::info($sorted);
+//                    Log::info($list['list']);
+//                    var_dump($list['list']);
                 }
             }
             $i++;
+            if(sizeof($list) == 0) break;
+            var_dump("AAAAAA ?> " . $user->user->id);
+//            die();
         }
+
         return $sorted;
     }
 
@@ -157,7 +198,8 @@ class MatchDancers implements ShouldQueue
 
             foreach($person_group as $person) {
                 if ($key == 'male')
-                    $copy = $all_persons['female']; elseif ($key == 'female')
+                    $copy = $all_persons['female'];
+                elseif ($key == 'female')
                     $copy = $all_persons['male'];
 
                 /**
@@ -170,8 +212,9 @@ class MatchDancers implements ShouldQueue
                         foreach ($copy as $idx => $likes) {
                             if ($liked_user['likes'] == $likes->user_id) {
                                 if ($key == 'male')
-                                    $male_priority[$person->user->id][] = $likes->user; elseif ($key == 'female')
-                                    $female_priority[$person->user->id][] = $likes->user;
+                                    $male_priority[$person->user->id][] = $likes->user->id;
+                                elseif ($key == 'female')
+                                    $female_priority[$person->user->id][] = $likes->user->id;
                                 unset($copy[$idx]);
                             }
                         }
@@ -192,79 +235,44 @@ class MatchDancers implements ShouldQueue
                             if ($key == 'male') {
                                 $temp_list = $this->sortingAge($person, $male_priority[$person->user->id]);
                                 foreach ($temp_list as $temp_user)
-                                    $male_priority[$person->user->id][] = $temp_user['id'];
+                                    $male_priority[$person->user->id][] = $temp_user;
                             } elseif ($key == 'female') {
                                 $temp_list = $this->sortingAge($person, $female_priority[$person->user->id]);
                                 foreach ($temp_list as $temp_user)
-                                    $female_priority[$person->user->id][] = $temp_user['id'];
+                                    $female_priority[$person->user->id][] = $temp_user;
                             }
                             break 2;
                         case 'height':
                             if ($key == 'male') {
                                 $temp_list = $this->sorting_height_or_level($person, $male_priority[$person->user->id], 'height');
                                 foreach ($temp_list as $temp_user)
-                                    $male_priority[$person->user->id][] = $temp_user['id'];
+                                    $male_priority[$person->user->id]['list'][] = $temp_user;
                             } elseif ($key == 'female') {
                                 $temp_list = $this->sorting_height_or_level($person, $female_priority[$person->user->id], 'height');
                                 foreach ($temp_list as $temp_user)
-                                    $female_priority[$person->user->id][] = $temp_user['id'];
+                                    $female_priority[$person->user->id]['list'][] = $temp_user;
                             }
                             break 2;
                         case 'level':
                             if ($key == 'male') {
+                                var_dump("....here ????");
                                 $temp_list = $this->sorting_height_or_level($person, $male_priority[$person->user->id], 'level');
+                                var_dump("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
                                 foreach ($temp_list as $temp_user)
-                                    $male_priority[$person->user->id][] = $temp_user['id'];
+                                    $male_priority[$person->user->id]['list'][] = $temp_user;
+                                var_dump("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
                             } elseif ($key == 'female') {
+                                var_dump($female_priority[$person->user->id]);
                                 $temp_list = $this->sorting_height_or_level($person, $female_priority[$person->user->id], 'level');
-                                foreach ($temp_list as $temp_user)
-                                    $female_priority[$person->user->id][] = $temp_user['id'];
+                                foreach ($temp_list as $temp_user){
+                                    $female_priority[$person->user->id]['list'][] = $temp_user;
+
+                                }
                             }
                             break 2;
                     }
+                    var_dump("B");
                 }
-
-                /**
-                 * This will add sorted (best to worst) persons that match the range and
-                 * with there already defined preference of the dancer to dance with.
-                 * This commented code was used previously to define priorities by range.
-                 * Now it is handled by score. In case that we need this function in the future I left it here.
-                 */ //                foreach(json_decode($person->priorities) as $priority) {
-                //
-                //                    switch($priority) {
-                //                        case 'age':
-                //                            $list = $this->get_age_by_range($person->user->birthday, $copy);
-                //                            $list = $this->sortingAge($person, $list);
-                //                            foreach ($list as $each) {
-                //                                if ($key == 'male')
-                //                                    $male_priority[$person->user->id][] = $each['id'];
-                //                                elseif ($key == 'female')
-                //                                    $female_priority[$person->user->id][] = $each['id'];
-                //                            }
-                //                            $list = null;
-                //                            break;
-                //                        case 'height':
-                //                            $list = $this->filter_by_range($person->user->height, $copy, 'height');
-                //                            $list = $this->sorting_height_or_level($person, $list, 'height');
-                //                            foreach ($list as $each) {
-                //                                if ($key == 'male')
-                //                                    $male_priority[$person->user->id][] = $each['id'];
-                //                                elseif ($key == 'female')
-                //                                    $female_priority[$person->user->id][] = $each['id'];
-                //                            }
-                //                            break;
-                //                        case 'level':
-                //                            $list = $this->filter_by_range($person->user->dancing_level, $copy, 'level');
-                //                            $list = $this->sorting_height_or_level($person, $list, 'level');
-                //                            foreach ($list as $each) {
-                //                                if ($key == 'male')
-                //                                    $male_priority[$person->user->id][] = $each['id'];
-                //                                elseif ($key == 'female')
-                //                                    $female_priority[$person->user->id][] = $each['id'];
-                //                            }
-                //                            break;
-                //                    }
-                //                }
 
                 /**
                  * Implementing the second (or first depending on previous liked dancers) to order prio by score.
@@ -275,9 +283,11 @@ class MatchDancers implements ShouldQueue
                 $user_age = $now->diff(new DateTime($person->user->birthday))->y;
 
                 foreach ($copy as $idx => $dancer) {
+                    var_dump("C");
                     $copy[$idx] = array();
                     $copy[$idx]['score'] = 0;
                     foreach (json_decode($person->priorities) as $pos => $priority) {
+                        var_dump("B");
                         $score = 0;
                         switch ($priority) {
                             case 'age':
@@ -323,11 +333,20 @@ class MatchDancers implements ShouldQueue
                 }
                 arsort($copy);
                 foreach($copy as $dancer_id => $score) {
+                    var_dump("E");
                     if ($score > 0) {
-                        if ($key == 'male')
-                            $male_priority[$person->user->id][] = $dancer_id;
-                        elseif ($key == 'female')
-                            $female_priority[$person->user->id][] = $dancer_id;
+                        if ($key == 'male'){
+                            if (array_key_exists('list', $male_priority[$person->user->id]))
+                                $male_priority[$person->user->id]['list'][] = $dancer_id;
+                            else
+                                $male_priority[$person->user->id][] = $dancer_id;
+                        }
+                        elseif ($key == 'female'){
+                            if (array_key_exists('list', $female_priority[$person->user->id]))
+                                $female_priority[$person->user->id]['list'][] = $dancer_id;
+                            else
+                                $female_priority[$person->user->id][] = $dancer_id;
+                        }
                         unset($copy[$dancer_id]);
                     }
                     else {
@@ -335,33 +354,59 @@ class MatchDancers implements ShouldQueue
                         $copy[] = $dancer_id;
                     }
                 }
+
             /**
              * These are the rest of the persons that could not be matched.
              * This list will be shuffled and added at the end
              */
             shuffle($copy);
             foreach ($copy as $pos => $user){
-                if ($key == 'male')
-                    $male_priority[$person->user->id][] = $user;
-                elseif ($key == 'female')
-                    $female_priority[$person->user->id][] = $user;
+                var_dump("F");
+                if ($key == 'male'){
+                    if (array_key_exists('list', $male_priority[$person->user->id]))
+                        $male_priority[$person->user->id]['list'][] = $user;
+                    else
+                        $male_priority[$person->user->id][] = $user;
+                }
+                elseif ($key == 'female'){
+                    if (array_key_exists('list', $female_priority[$person->user->id]))
+                        $female_priority[$person->user->id]['list'][] = $user;
+                    else
+                        $female_priority[$person->user->id][] = $user;
+                }
                 unset($copy[$pos]);
             }
-            if ($key == 'male')
-                $male_priority[$person->user->id] = array('found' => false) + array("list" =>
-                        $male_priority[$person->user->id]);
-            elseif ($key == 'female')
-                $female_priority[$person->user->id] = array('found' => false) + array("list" =>
-                        $female_priority[$person->user->id]);
+            if ($key == 'male'){
+                if (array_key_exists('list', $male_priority[$person->user->id]))
+                    $male_priority[$person->user->id] = array('found' => false) + array("list" => $male_priority[$person->user->id]['list']);
+                else
+                    $male_priority[$person->user->id] = array('found' => false) + array("list" => $male_priority[$person->user->id]);
+//                if ($person->user->id == 105) dd("NOOOOONEN => " . $person->user->id);
             }
+            elseif ($key == 'female') {
+                var_dump("--------------------------------------------------------------");
+                var_dump($female_priority[$person->user->id]);
+                if (array_key_exists('list', $female_priority[$person->user->id]))
+                    $female_priority[$person->user->id] = array('found' => false) + array("list" => $female_priority[$person->user->id]['list']);
+                else
+                    $female_priority[$person->user->id] = array('found' => false) + array("list" => $female_priority[$person->user->id]);
+            }
+            }
+            var_dump("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//            var_dump($female_priority[$person->user->id]);
+            var_dump("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//        dd($female_priority);
         }
-
+//            dd($male_priority);
+//        dd($female_priority);
+                var_dump("--------------------------------------------------------------");
 
         /**
          * This will decide which of the lists should be run first male or female.
          * It is necessary to start from the smaller list for the algorithm.
          * Otherwise, it would have never known when the algorithm is done.
          */
+//        dd($female_priority);
         if (sizeof($female_priority) <= sizeof($male_priority)){
             $table_a = $female_priority;
             $female_priority = null;
@@ -373,18 +418,38 @@ class MatchDancers implements ShouldQueue
             $table_b = $female_priority;
             $female_priority = null;
         }
+//        dd($table_a);
 
         $completed = false;
 //        Log::info($table_a);
 //        Log::info($table_b);
 
         while (!$completed) {
+            var_dump("G");
+//            var_dump($table_a);
+//            var_dump($table_b);
+//            die();
             foreach ($table_a as $a_id => $item) {
+//                dd($table_a);
+                var_dump($item);
+                var_dump("--------------------------------------------------------------------------------------------");
                 $completed = true;
+                Log::info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                Log::info($a_id);
+                Log::info($item);
+                Log::info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
                 if (!$item['found']) {
                     $completed = false;
                     $possible_partner = reset($item['list']);
+                    var_dump($item['list']);
+                    var_dump($possible_partner);
+                    var_dump("....");
+                    var_dump(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//                    dd($table_b[175]);
+                    var_dump($table_a);
+                    Log::info($possible_partner);
                     if (!$table_b[$possible_partner]['found']) {
+//                        dd($table_b);
                         foreach (array_reverse($table_b[$possible_partner]['list']) as $id) {
                             if ($a_id == $id) {
                                 $table_a[$a_id]['found'] = true;
@@ -393,13 +458,20 @@ class MatchDancers implements ShouldQueue
                             } else
                                 array_pop($table_b[$possible_partner]['list']);
                         }
+//                        dd($table_b);
                     } else {
                         if (in_array($a_id, $table_b[$possible_partner]['list'])) {
                             $tmp = array();
                             foreach ($table_b[$possible_partner]['list'] as $i => $id) {
                                 $tmp[] = $id;
-                                if ($a_id != $id)
-                                    unset($table_b[$possible_partner]['list'][$id]); else
+                                if ($a_id != $id){
+                                    var_dump("============================================================");
+                                    var_dump($id);
+                                    var_dump($possible_partner);
+//                                    dd($table_b);
+                                    unset($table_b[$possible_partner]['list'][$id]);
+                                    var_dump("============================================================");}
+                                else
                                     break;
                             }
 
