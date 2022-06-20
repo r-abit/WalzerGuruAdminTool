@@ -8,7 +8,6 @@ use App\Models\EventParticipation;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Http\Request;
 use App\Models\Organizer;
-use App\Models\Event;
 use Inertia\Response;
 use App\Models\User;
 
@@ -31,6 +30,7 @@ class DashboardController extends Controller
             if ($event['date'] > $date_now) {
                 if (Auth::user()->role == 'user'){
                     $matching_event_partner = EventPartner::where('event_id', $event['id'])
+                        ->where('user', Auth::id())
                         ->orderByDesc('id')
                         ->first();
                     if ($matching_event_partner) {
