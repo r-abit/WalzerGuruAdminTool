@@ -1,6 +1,6 @@
 <p align="center" style="max-height:200px; overflow: hidden; display: flex; align-items: center; justify-content: 
 center;">
-  <img src="logo.png" alt="drawing" style="max-height:500px; "/>
+  <img src="cover.png" alt="drawing" style="height:200px; "/>
 </p>
 
 ## About Walzer.Guru
