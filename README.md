@@ -1,64 +1,77 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
-
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<p align="center" style="max-height:200px; overflow: hidden; display: flex; align-items: center; justify-content: 
+center;">
+  <img src="logo.png" alt="drawing" style="max-height:500px; "/>
 </p>
 
-## About Laravel
+## About Walzer.Guru
+Walzer.Guru is an administrator tool that represents the backend of
+the app and allows organizers to create events. Users can register,
+sign in/out for an event and before an event a job can be triggered
+to find a suitable dance partner who has also signed up for the event.
+The suitable dance partner is found on the basis of three parameters, age,
+height and dance level, which the user specifies when registering for the event.
+<br>
+The application is written in Laravel, which is a PHP-framework.
+### Requirements
+- Docker
+- PHP & Composer
+- npm v8.12.1
+- Node v18.4.0
+### Installation
+To set the application in your environment follow the instructions step by step.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. ```composer install```
+2. ```./vendor/bin/sail up -d```
+3. ```./vendor/bin/sail artisan migrate```
+4. ```npm run dev```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#### Optional
+- To populate the database with fake data<br>```./vendor/bin/sail artisan db:seed```
+- To run a queue-worker open the terminal and run<br>```./vendor/bin/sail artisan queue:work```
+- To manually trigger the matching-algorithmen run this command.
+  <br>```./vendor/bin/sail artisan tinker```
+  <br>```MatchDancers::dispatchIf($event_id);```
+- The registration form is invisible at the moment. The path to registration is<br>http://localhost/register
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### About Frontend
+Here we use [Inertia](https://inertiajs.com) which is the bridge between the front- and backend and is written in 
+[Vue3](https://vuejs.org/guide/introduction.html).
 
-## Learning Laravel
+Since this is a single-page app, the folders are separated so 
+that there is a separate folder for each "main container" and the ```Show.vue``` is loaded. Each component that 
+contains the ```Show.vue``` are created in Partials. So a better overview is given.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```
+|── resources
+│   │── js
+│   │   │── Jetstream
+│   │   └── Layourts
+│   └── Pages
+│   │   └── Dashboard
+│   │   │   │── Partials
+│   │   │   │   └── ...
+│   │   │   └── Show.vue
+│   │   └── Events
+│   │   │   │── Partials
+│   │   │   │   └── ...
+│   │   │   └── Show.vue
+│   │   └── ...
+│   └── ...
+└── ...
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Matching Algorithm
+The Maching algorithm has the task to form from two groups (men and women), which register for an event under the 
+equilibrium distribution of Gale-Shapley.Priority lists are created for each person appendix of the three parameters age, body size and dance level. These 
+parameters are scored according to the order. The whole calculation is summarized as one job 
+```app/Jobs/MatchingDancers.php```.
 
-## Laravel Sponsors
+### Laravel Documentation
+since laravel already provides a very clear and detailed documentation (and I am not a big writer myself) here is 
+the [link](https://laravel.com/docs) to it. Learn more about: 
+- [Routes](https://laravel.com/docs/routing).
+- [Eloqent ORM](https://laravel.com/docs/eloquent).
+- [Migrations](https://laravel.com/docs/migrations).
+- [Queues](https://laravel.com/docs/queues).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+If you are not a big reader, there is also [Laracasts](https://laracasts.com) which will help you to get to know Laravel better.
