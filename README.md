@@ -66,6 +66,13 @@ equilibrium distribution of Gale-Shapley.Priority lists are created for each per
 parameters are scored according to the order. The whole calculation is summarized as one job 
 ```app/Jobs/MatchingDancers.php```.
 
+### Database 
+
+<p align="center" style="overflow: hidden; display: flex; align-items: center; justify-content: 
+center;">
+  <img src=UML_Database.png alt="drawing"/>
+</p>
+
 ### Laravel Documentation
 since laravel already provides a very clear and detailed documentation (and I am not a big writer myself) here is 
 the [link](https://laravel.com/docs) to it. Learn more about: 
