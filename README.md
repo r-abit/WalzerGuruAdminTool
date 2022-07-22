@@ -31,7 +31,7 @@ To set the application in your environment follow the instructions step by step.
 - To manually trigger the matching-algorithmen run this command.
   <br>```./vendor/bin/sail artisan tinker```
   <br>```MatchDancers::dispatchIf($event_id);```
-- The registration form is invisible at the moment. The path to registration is<br>http://localhost/register
+- The registration form is invisible at the moment. The path to registration is<br>localhost/register
 
 ### About Frontend
 Here we use [Inertia](https://inertiajs.com) which is the bridge between the front- and backend and is written in 
@@ -62,7 +62,7 @@ contains the ```Show.vue``` are created in Partials. So a better overview is giv
 
 ### Matching Algorithm
 The Maching algorithm has the task to form from two groups (men and women), which register for an event under the 
-equilibrium distribution of Gale-Shapley.Priority lists are created for each person appendix of the three parameters age, body size and dance level. These 
+equilibrium distribution of Gale-Shapley. Priority lists are created for each person appendix of the three parameters age, body size and dance level. These 
 parameters are scored according to the order. The whole calculation is summarized as one job 
 ```app/Jobs/MatchingDancers.php```.
 
